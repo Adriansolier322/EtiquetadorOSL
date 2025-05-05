@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tomorrow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Modo Oscuro */
+body.dark {
+    --body-bg: #727272;
+    --h1: #303030;
+    --form-bg: #2a2a2a;
+    --form-box-shadow: 0 0 0px rgba(0, 255, 234, 0.2);
+    --general-color: #eee;
+    --textarea-bg: #212121;
+    --radio-green: #080;
+    --radio-red: #bd2408;
+}
+
+body.light {
+    --body-bg: #ebecee; /* fondo más claro y limpio */
+    --h1: #1a1a1a; /* mejor contraste y claridad */
+    --form-bg: #ffffff; /* fondo de formulario limpio */
+    --form-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* sombra más suave y moderna */
+    --general-color: #333; /* mejor contraste para texto general */
+    --textarea-bg: #ececec; /* fondo suave para textarea */
+    --radio-green: #59c27a; /* verde más moderno y accesible */
+    --radio-red: #d86154; /* rojo más vibrante pero legible */
+}
+
+body {
+    background-color: var(--body-bg);
+    margin: 0;
+    padding: 0;
+    font-family: 'Tomorrow', monospace;
+}
+
+.layout {
+    width: 99,6%;
+    display: grid;
+    grid:
+      "header header" auto
+      "options options" auto
+      "form preview" 1fr
+      "footer footer" auto
+      / 1fr 0.5fr;
+    gap: 5px;
+    grid-auto-flow: row dense;
+    align-content: center;
+    padding: 7.5px;
+}
+
+.header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+h1 {
+    font-family: 'Tomorrow', monospace;
+    font-size: 40px;
+    color: var(--h1);
+    padding: 20px;
+    display: inline-block;
+}
+
+.form {
+    grid-area: form;
+    background-color: var(--form-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--form-box-shadow);
+    color: var(--general-color);
+}
+
+.preview {
+    grid-area: preview;
+    width: 100%;
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.twodivinline {
+    font-size: 26px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    gap: 8px;
+}
+.line{
+    font-size: 26px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    gap: 9px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--general-color);
+    font-family: 'Tomorrow', monospace;
+}
+
+/* Inputs, selects y textarea */
+select,
+textarea {
+    background-color: var(--textarea-bg);
+    color: var(--general-color);
+    border: 2px solid var(--body-bg);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23eee" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+select:focus,
+textarea:focus,
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #00ffea;
+    box-shadow: 0 0 5px #00ffea;
+}
+
+textarea {
+    resize: vertical;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="number"] {
+    flex: 1;
+    box-sizing: border-box;
+    background-color: var(--textarea-bg);
+    color: var(--general-color);
+    border: 2px solid var(--body-bg);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 15px;
+    font-family: 'Courier New', monospace;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+/* Botón de enviar */
+.theme-button,
+input[type="submit"] {
+    width: 100%;
+    background-color: #00ffea;
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Tomorrow', monospace;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ffea;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+.theme-button:hover,
+input[type="submit"]:hover {
+    background-color: #0cfbf0;
+    box-shadow: 0 0 20px #0cfbf0;
+}
+
+/* Radios personalizados */
+.radio-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.radio-input input {
+    display: none;
+    width: 100%;
+}
+
+.radio-input {
+    --container_width: 250px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: var(--textarea-bg);
+    color: var(--general-color);
+    width: var(--container_width);
+    overflow: hidden;
+    border: 2px solid var(--body-bg);
+}
+
+.radio-input label {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    font-weight: 600;
+    letter-spacing: -1px;
+    font-size: 14px;
+}
+
+.selection {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: calc(var(--container_width) / 2);
+    z-index: 0;
+    left: 0;
+    top: 0;
+    transition: 0.15s ease;
+}
+
+.radio-input label:nth-child(1):has(input:checked) {
+    color: var(--general-color);
+}
+.radio-input label:nth-child(2):has(input:checked) {
+    color: var(--general-color);
+}
+.radio-input label:nth-child(1):has(input:checked) ~ .selection {
+    background-color: var(--radio-green);
+    display: inline-block;
+    transform: translateX(0%);
+}
+.radio-input label:nth-child(2):has(input:checked) ~ .selection {
+    background-color: var(--radio-red);
+    display: inline-block;
+    transform: translateX(100%);
+}
+
+/* Otros */
+.vertical-line {
+    height: auto;
+    width: 1px;
+    border-radius: 40px;
+    background-color: var(--body-bg);
+    padding-right: 2px;
+}
+
+
+/* footer */
+.footer {
+    font-family: 'Courier New', Courier, monospace;
+    grid-area: footer;
+    color: var(--general-color);
+    background-color: var(--form-bg);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  .footer-content {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    text-align: right;
+  }
+  
+  .footer-text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  .footer-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+  }
+  
+  .footer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--general-color);
+    color: var(--general-color);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .footer-btn:hover {
+    background-color: var(--general-color);
+    color: var(--form-bg);
+  }
+  
+
+
+
+.options {
+    grid-area: options;
+    background-color: var(--form-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--form-box-shadow);
+}
+    .options-btn-save,
+    .options-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--general-color);
+    color: var(--general-color);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+    .options-btn:hover {
+    background-color: var(--general-color);
+    color: var(--form-bg);
+  }
+
+  .options-btn-save:hover {
+    background-color: var(--radio-green);
+    border: 1px solid var(--radio-green);
+  }
+
+
+
+  /*POPUPS*/
+  .my-popup-class {
+    background-color: var(--form-bg);   /* fondo oscuro personalizado */
+    color: var(--general-color);                 /* texto blanco */
+    font-family: 'Tomorrow', monospace;
+}
+.my-confirm-button {
+    background-color: var(--radio-green) !important; /* verde */
+    color: var(--general-color) !important;
+    font-family: 'Tomorrow', monospace;
+}
+.my-cancel-button {
+    background-color: var(--radio-red) !important; /* rojo */
+    color: var(--general-color) !important;
+    font-family: 'Tomorrow', monospace;
+}
+  
+
+
+
+
+
+
+.popup-btn {
+    flex-grow: 1;
+    text-align: left;
+    margin-right: 10px;
+    padding: 8px 12px;
+    background-color: transparent;
+    border: 1px solid var(--general-color);
+    color: var(--general-color);
+    font-size: 0.85rem;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+.popup-btn:hover {
+    background-color: var(--general-color);
+    color: var(--form-bg);
+}
+
+.popup-delete-btn {
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--general-color);
+    color: var(--general-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-delete-btn:hover {
+    background-color: var(--radio-red);
+    color: var(--form-bg);
+}
+
+.saved-file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
