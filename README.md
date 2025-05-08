@@ -48,6 +48,7 @@ sudo apt install php libapache2-mod-php php-mysql -y
 ```bash
 sudo apt install python3 python3-pip
 sudo pip install --break-system-packages fillpdf
+sudo pip install --break-system-packages pymupdf
 ```
 ## Configuración
 

@@ -2,9 +2,9 @@
 
 // Datos de configuracion de acceso mysql
 $serverip = "localhost";  // Poner aqui la ip del servidor (ej: localhost)
-$username = "username";   // Nombre de usuario con acceso a la base de datos
+$username = "etiquetador";   // Nombre de usuario con acceso a la base de datos
 $password = "password";   // Contraseña del usuario con acceso a la base de datos
-$dbname = "database_name";      // Nombre de la base de datos
+$dbname = "etiquetador";      // Nombre de la base de datos
 
 
 // Conexion con la base de datos
