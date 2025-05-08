@@ -9,8 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
     
-    $source = 'scripts/pdf/generado.pdf';
-    $targetDir = 'scripts/pdf/saved/';
+    $source = 'pdf/generado.pdf';
+    $targetDir = 'pdf/saved/';
     
     if (!file_exists($source)) {
         echo json_encode(['success' => false, 'message' => 'No hay PDF para guardar']);

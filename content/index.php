@@ -35,11 +35,17 @@
             </svg>
             Guardar
             </button>
-            <button class="options-btn-save" onclick="load()">
+            <button class="options-btn" onclick="load()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
             </svg>
             Cargar
+            </button>
+            <button class="options-btn" onclick="loadModel()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
+            </svg>
+            Gestionar Modelos
             </button>
 
         </div>
@@ -59,7 +65,7 @@
                 <div class="form-group">
                     <label for="cpu_name">Nombre CPU:</label>
                     <div class="line">
-                    <select name="cpu_name" id="cpu_name" required>
+                    <select name="cpu_name" id="cpu_name" style="width: 25%;">
                         <option>Indefinido</option>
                         <?php
                         $stmt = $conn->prepare("SELECT DISTINCT name FROM cpu ORDER BY name ASC");
@@ -78,8 +84,8 @@
                 <div class="form-group">
                     <label for="ram_capacity">Memoria:</label>
                     <div class="line">
-                        <select name="ram_capacity" id="ram_capacity">
-                            <option>Indefinida</option>
+                        <select name="ram_capacity" id="ram_capacity" style="width: 25%;">
+                            <option>Indefinido</option>
                             <?php
                             $stmt = $conn->prepare("SELECT DISTINCT capacity FROM ram ORDER BY capacity");
                             $stmt->execute();
@@ -90,7 +96,7 @@
                         </select>
                         <input type="number" id="ram_other_capacity" name="ram_other_capacity" placeholder="0" max="99999">
                         GB |
-                        <select name="ram_type" id="ram_type">
+                        <select name="ram_type" id="ram_type" style="width: 19.5%;">
                             <option value="ddr2">DDR2</option>
                             <option value="ddr3">DDR3</option>
                             <option value="ddr4">DDR4</option>
@@ -103,7 +109,7 @@
                 <div class="form-group">
                     <label for="disc_capacity">Disco duro:</label>
                     <div class="line">
-                        <select name="disc_capacity" id="disc_capacity">
+                        <select name="disc_capacity" id="disc_capacity" style="width: 25%;">
                             <option>Indefinido</option>
                             <?php
                             $stmt = $conn->prepare("SELECT DISTINCT capacity FROM disc ORDER BY capacity");
@@ -115,7 +121,7 @@
                         </select>
                         <input type="number" id="disc_other_capacity" name="disc_other_capacity" placeholder="0" max="99999">
                         GB |
-                        <select name="disc_type" id="disc_type">
+                        <select name="disc_type" id="disc_type" style="width: 19.5%;">
                             <option value="hdd">HDD</option>
                             <option value="ssd">SSD</option>
                             <option value="nvme">NVMe</option>
@@ -128,8 +134,8 @@
                 <div class="form-group">
                     <label for="gpu_name">Gráfica:</label>
                     <div class="line">
-                        <select name="gpu_name" id="gpu_name">
-                            <option>Indefinida</option>
+                        <select name="gpu_name" id="gpu_name" style="width: 25%;">
+                            <option>Indefinido</option>
                             <?php
                             $stmt = $conn->prepare("SELECT DISTINCT name FROM gpu ORDER BY name ASC");
                             $stmt->execute();
@@ -139,7 +145,7 @@
                             ?>
                         </select>
                         <input type="text" placeholder="Escribir nombre del gpu en caso de otro" id="gpu_other_name" name="gpu_other_name" maxlength="40">
-                        <select name="gpu_type" id="gpu_type">
+                        <select name="gpu_type" id="gpu_type" style="width: 20%">
                             <option value="integrada">Integrada</option>
                             <option value="externa">Externa</option>
                         </select>
@@ -178,7 +184,7 @@
                     </div>
                     <div class="vertical-line"></div>
 
-                <!--Numero de serie-->
+                    <!--Numero de serie-->
                     <div class="twodivinline">
                         <label for="SN">Número de serie:</label>
                         <div class="line">
@@ -193,6 +199,12 @@
                             </select>
                             <input type="text" placeholder="Prefijo (ej: ABC)" id="sn_prefix_other" name="sn_prefix_other" maxlength="3">
                         </div>
+                        
+                        <!--Cantidad de etiquetas-->
+                        <label for="num_pag" style="margin-top: 6px">Cantidad de etiquetas</label>
+                        <div class="line">
+                            <input type="number" placeholder="1" id="num_pag" name="num_pag" max="50" min="1" value="1" required>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -203,7 +215,7 @@
                     <textarea maxlength="567" id="observaciones" name="observaciones" rows="4" cols="50"></textarea>
                 </div>
 
-                <input type="submit" value="Generar Preview">
+                <input type="submit" value="Generar Preview" onclick="reload_iframe()">
             </form>
         </div>
 
@@ -211,15 +223,15 @@
         <div class="preview">
 
             <?php
-            $pdfToShow = 'scripts/pdf/etiqueta_preview.pdf';
+            $pdfToShow = 'pdf/etiqueta_preview.pdf';
             
             if (isset($_GET['pdf']) && file_exists($_GET['pdf'])) {
                 $pdfToShow = $_GET['pdf'];
-            } elseif (file_exists('scripts/pdf/generado.pdf')) {
-                $pdfToShow = 'scripts/pdf/generado.pdf';
+            } elseif (file_exists('pdf/generado.pdf')) {
+                $pdfToShow = 'pdf/generado.pdf';
             }
             
-            echo "<iframe src='$pdfToShow#toolbar=0#view=Fit' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
+            echo "<iframe id='iframe_preview'src='$pdfToShow#toolbar=0#view=Fit' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
             ?>
 
         </div>

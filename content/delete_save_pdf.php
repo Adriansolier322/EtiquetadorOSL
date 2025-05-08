@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pdfPath = $data['path'] ?? '';
 
     // Validar que el path es seguro (evitar path traversal)
-    $baseDir = realpath('scripts/pdf/saved/');
+    $baseDir = realpath('pdf/saved/');
     $fullPath = realpath($pdfPath);
     
     if ($fullPath && strpos($fullPath, $baseDir) === 0 && is_file($fullPath)) {

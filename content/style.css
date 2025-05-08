@@ -101,7 +101,7 @@ h1 {
 
 label {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--general-color);
     font-family: 'Tomorrow', monospace;
 }
@@ -114,7 +114,7 @@ textarea {
     border: 2px solid var(--body-bg);
     border-radius: 6px;
     padding: 10px;
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Courier New', monospace;
     outline: none;
     transition: border 0.2s, box-shadow 0.2s;
@@ -154,7 +154,7 @@ input[type="number"] {
     border: 2px solid var(--body-bg);
     border-radius: 6px;
     padding: 10px;
-    font-size: 15px;
+    font-size: 16px;
     font-family: 'Courier New', monospace;
     outline: none;
     transition: border 0.2s, box-shadow 0.2s;
@@ -421,4 +421,31 @@ input[type="submit"]:hover {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+}
+
+
+
+
+/* Estilos adicionales para el popup de modelos */
+.model-input {
+    background-color: var(--textarea-bg);
+    color: var(--general-color);
+    border: 1px solid var(--body-bg);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: 'Tomorrow', monospace;
+    margin-bottom: 10px;
+    width: 67%;
+
+}
+
+.newModelName:focus {
+    outline: none;
+    border-color: #00ffea;
+    box-shadow: 0 0 5px #00ffea;
+}
+
+.save-model-btn{
+height: 40px;
+width: 32%;
 }

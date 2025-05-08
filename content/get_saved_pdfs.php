@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$savedPdfDir = 'scripts/pdf/saved/';
+$savedPdfDir = 'pdf/saved/';
 $pdfs = [];
 
 if (file_exists($savedPdfDir) && is_dir($savedPdfDir)) {
