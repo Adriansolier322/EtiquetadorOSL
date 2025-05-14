@@ -1,5 +1,6 @@
-window.onbeforeunload = null;
+
 document.addEventListener('DOMContentLoaded', () => {
+    window.onbeforeunload = null;
     const toggle = document.getElementById('theme-toggle');
 
     const userPref = localStorage.getItem('theme');
