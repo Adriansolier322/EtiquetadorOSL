@@ -28,23 +28,23 @@
                 <input type="text" placeholder="Escribir nombre del ticket en caso de guardado" id="ticket_name" name="ticket_name">
             </div>
             <button class="options-btn-save" onclick="save()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="8" y="8" width="48" height="48" rx="2" ry="2"/>
-            <rect x="24" y="8" width="16" height="12"/>
-            <rect x="20" y="40" width="24" height="16"/>
-            </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="8" y="8" width="48" height="48" rx="2" ry="2"/>
+                <rect x="24" y="8" width="16" height="12"/>
+                <rect x="20" y="40" width="24" height="16"/>
+                </svg>
             Guardar
             </button>
             <button class="options-btn" onclick="load()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
-            </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
+                </svg>
             Cargar
             </button>
             <button class="options-btn" onclick="loadModel()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
-            </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
+                </svg>
             Gestionar Modelos
             </button>
 
@@ -75,7 +75,7 @@
                         }
                         ?>
                     </select>
-                    <input type="text" placeholder="Escribir nombre del cpu en caso de otro" id="cpu_other_name" name="cpu_other_name">
+                    <input type="text" placeholder="Escribir nombre del cpu en caso de otro" id="cpu_other_name" name="cpu_other_name" maxlength=25>
                     </div>
                 </div>
                 <hr>
@@ -144,7 +144,7 @@
                             }
                             ?>
                         </select>
-                        <input type="text" placeholder="Escribir nombre del gpu en caso de otro" id="gpu_other_name" name="gpu_other_name" maxlength="40">
+                        <input type="text" placeholder="Escribir nombre del gpu en caso de otro" id="gpu_other_name" name="gpu_other_name" maxlength=18>
                         <select name="gpu_type" id="gpu_type" style="width: 20%">
                             <option value="integrada">Integrada</option>
                             <option value="externa">Externa</option>
@@ -212,7 +212,7 @@
                 <!-- Observaciones -->
                 <div class="form-group">
                     <label for="observaciones">Observaciones:</label>
-                    <textarea maxlength="567" id="observaciones" name="observaciones" rows="4" cols="50"></textarea>
+                    <textarea id="observaciones" name="observaciones" rows="4" cols="50" placeholder="NO poner más de 5 lineas" maxlength=120></textarea>
                 </div>
 
                 <input type="submit" value="Generar Preview" onclick="reload_iframe()">
@@ -243,8 +243,8 @@
             <div class="footer-buttons">
             <a href="https://github.com/Adriansolier322/EtiquetadorOSL" class="footer-btn" target="_blank">
             <!-- Logo de GitHub -->
-                <svg height="22" viewBox="0 0 16 16" width="22" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 
+            <svg height="22" viewBox="0 0 16 16" width="22" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 
                 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52
                 -.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78
                 -.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 
@@ -252,7 +252,7 @@
                 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 
                 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 
                 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                </svg>
+            </svg>
                 GitHub
             </a>
 
