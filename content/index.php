@@ -15,12 +15,11 @@
 <body>
     <section class="layout">
         <div class="header">
-            <img src="public/logo_UGR_horizontal.png" width=350>
+            <img src="public/logo_UGR_horizontal.webp" width=350>
             <h1>Generador de etiquetas</h1>
-            <img src="public/osl_logo.png" width=300>
+            <img src="public/osl_logo.webp" width=300>
 
         </div>
-
         <div class="options">
             <!-- Nombre de la etiqueta -->
             <div class="form-group">
@@ -66,7 +65,7 @@
                     <label for="cpu_name">Nombre CPU:</label>
                     <div class="line">
                     <select name="cpu_name" id="cpu_name" style="width: 25%;">
-                        <option>Indefinido</option>
+                        <option selected disabled>Indefinido</option>
                         <?php
                         $stmt = $conn->prepare("SELECT DISTINCT name FROM cpu ORDER BY name ASC");
                         $stmt->execute();
@@ -85,7 +84,7 @@
                     <label for="ram_capacity">Memoria:</label>
                     <div class="line">
                         <select name="ram_capacity" id="ram_capacity" style="width: 25%;">
-                            <option>Indefinido</option>
+                            <option selected disabled>Indefinido</option>
                             <?php
                             $stmt = $conn->prepare("SELECT DISTINCT capacity FROM ram ORDER BY capacity");
                             $stmt->execute();
@@ -110,7 +109,7 @@
                     <label for="disc_capacity">Disco duro:</label>
                     <div class="line">
                         <select name="disc_capacity" id="disc_capacity" style="width: 25%;">
-                            <option>Indefinido</option>
+                            <option selected disabled>Indefinido</option>
                             <?php
                             $stmt = $conn->prepare("SELECT DISTINCT capacity FROM disc ORDER BY capacity");
                             $stmt->execute();
@@ -135,7 +134,7 @@
                     <label for="gpu_name">Gráfica:</label>
                     <div class="line">
                         <select name="gpu_name" id="gpu_name" style="width: 25%;">
-                            <option>Indefinido</option>
+                            <option selected disabled>Indefinido</option>
                             <?php
                             $stmt = $conn->prepare("SELECT DISTINCT name FROM gpu ORDER BY name ASC");
                             $stmt->execute();
@@ -190,7 +189,7 @@
                         <div class="line">
                             <select name="sn_prefix" id="sn_prefix">
                             <?php
-                            $stmt = $conn->prepare("SELECT DISTINCT prefix FROM sn ORDER BY prefix ASC");
+                            $stmt = $conn->prepare("SELECT DISTINCT prefix FROM sn ORDER BY id asc");
                             $stmt->execute();
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 echo '<option value="' . $row['prefix'] . '">' . htmlspecialchars($row['prefix']) . '</option>';
@@ -231,7 +230,7 @@
                 $pdfToShow = 'pdf/generado.pdf';
             }
             
-            echo "<iframe id='iframe_preview'src='$pdfToShow#toolbar=0#view=Fit' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
+            echo "<iframe id='iframe_preview'src='$pdfToShow' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
             ?>
 
         </div>
