@@ -222,14 +222,6 @@
         <div class="preview">
 
             <?php
-            $pdfToShow = 'pdf/etiqueta_preview.pdf';
-            
-            if (isset($_GET['pdf']) && file_exists($_GET['pdf'])) {
-                $pdfToShow = $_GET['pdf'];
-            } elseif (file_exists('pdf/generado.pdf')) {
-                $pdfToShow = 'pdf/generado.pdf';
-            }
-            
             echo "<iframe id='iframe_preview'src='$pdfToShow' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
             ?>
 

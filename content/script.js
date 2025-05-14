@@ -24,11 +24,21 @@ document.addEventListener('DOMContentLoaded', () => {
     refresh_iframe()
     });
     function refresh_iframe() {
-        const iframe = document.getElementById('preview_iframe');
-        const nuevaRuta = 'pdf/generado.pdf';
+        const iframe = document.getElementById('iframe_preview');
         
-        // Añadir timestamp para evitar caché
-        iframe.src = `${nuevaRuta}?t=${Date.now()}`;
+        fetch('pdf/generado.pdf', { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    return nuevaRuta = 'pdf/generado.pdf';
+                } else {
+                    return nuevaRuta = 'pdf/etiqueta_preview.pdf';
+                }
+            })
+            .then(data => {
+                // Añadir timestamp para evitar caché
+                iframe.src = `${data}?t=${Date.now()}`;
+            })
+
       }
       
 
@@ -434,14 +444,3 @@ function updateRadioSelection(name) {
     }
 }
 
-$(document).ready(function () {
-    $('textarea[data-limit-rows=true]').on('keypress', function (event) {
-      var textarea = $(this),
-          numberOfLines = (textarea.val().match(/\n/g) || []).length + 1,
-          maxRows = parseInt(textarea.attr('rows'));
-      
-      if (event.which === 13 && numberOfLines === maxRows ) {
-        return false;
-      }
-    });
-  });
