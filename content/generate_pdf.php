@@ -28,7 +28,6 @@ $data = [
     'observaciones'       => $_POST['observaciones'] ?? ''
 ];
 
-// Priorizar entradas manuales y agregar a la base de datos si aplica
 $manualFields = [
     'cpu'  => ['field' => 'cpu_other_name', 'target' => 'cpu_name', 'column' => 'name'],
     'ram'  => ['field' => 'ram_other_capacity', 'target' => 'ram_capacity', 'column' => 'capacity'],
@@ -36,11 +35,26 @@ $manualFields = [
     'gpu'  => ['field' => 'gpu_other_name', 'target' => 'gpu_name', 'column' => 'name']
 ];
 
+// Variables para almacenar IDs de componentes
+$cpu_id = null;
+$ram_id = null;
+$disc_id = null;
+$gpu_id = null;
+
 foreach ($manualFields as $table => $info) {
     if (!empty($data[$info['field']])) {
         $data[$info['target']] = $data[$info['field']];
         $stmt = $conn->prepare("INSERT INTO $table ({$info['column']}) VALUES (?)");
         $stmt->execute([$data[$info['target']]]);
+        ${$table.'_id'} = $conn->lastInsertId(); // Guardar el ID insertado
+    } else {
+        // Obtener ID del componente seleccionado si no es manual
+        $stmt = $conn->prepare("SELECT id FROM $table WHERE {$info['column']} = ? LIMIT 1");
+        $stmt->execute([$data[$info['target']]]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            ${$table.'_id'} = $row['id'];
+        }
     }
 }
 
@@ -57,14 +71,16 @@ function escapeArgs(array $args): array {
 // Lógica para generación de PDF
 $prefix = $data['sn_prefix'];
 $num_pag = (int)$data['num_pag'];
+
 $clean = "true";
 
 $num_pag = (int)($data['num_pag']);
 $is_single = $num_pag < 2 ? "true" : "false";
 $total_pages = $is_single=="true" ? 1 : $num_pag;
 
+// Insertar datos en la tabla pc para cada etiqueta generada
 for ($i = 1; $i <= $num_pag; $i++) {
-    
+
     $is_last = ($i === $total_pages);
     $end = $is_last ? "true" : "false";
 
@@ -72,13 +88,29 @@ for ($i = 1; $i <= $num_pag; $i++) {
 
     // Obtener el siguiente número de serie
     $stmt = $conn->prepare("SELECT MAX(num) AS last_num FROM sn WHERE prefix = ?");
-    $stmt->execute([$prefix]);
+    $stmt->execute([$data['sn_prefix']]);
     $last_num = $stmt->fetch(PDO::FETCH_ASSOC)['last_num'] ?? 0;
     $sn_num = $last_num + 1;
 
     // Insertar nuevo SN
     $stmt = $conn->prepare("INSERT INTO sn (prefix, num) VALUES (?, ?)");
-    $stmt->execute([$prefix, $sn_num]);
+    $stmt->execute([$data['sn_prefix'], $sn_num]);
+    $sn_id = $conn->lastInsertId();
+
+    // Insertar en la tabla pc
+    $stmt = $conn->prepare("INSERT INTO pc (cpu, ram, ram_type, disc, disc_type, gpu, sn, obser) 
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([
+        $cpu_id,
+        $ram_id,
+        $data['ram_type'],
+        $disc_id,
+        $data['disc_type'],
+        $gpu_id,
+        $sn_id,
+        $data['observaciones']
+    ]);
+
 
     // Escapar solo una vez en la primera iteración (optimización)
     if ($i === 1) {
@@ -114,6 +146,7 @@ for ($i = 1; $i <= $num_pag; $i++) {
     $output = shell_exec($command);
     
     $clean = "false"; // Solo la primera vez es true
+
 }
 
 sleep(0.1);

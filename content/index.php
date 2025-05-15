@@ -12,7 +12,7 @@
 
     <title>Etiquetador OSL</title>
 </head>
-<body>
+<body onload="disableSaveAsk()">
     <section class="layout">
         <div class="header">
             <img src="public/logo_UGR_horizontal.webp" width=350>

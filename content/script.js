@@ -1,6 +1,10 @@
 
-document.addEventListener('DOMContentLoaded', () => {
+function disableSaveAsk(){
     window.onbeforeunload = null;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
     const toggle = document.getElementById('theme-toggle');
 
     const userPref = localStorage.getItem('theme');

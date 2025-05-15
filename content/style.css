@@ -172,7 +172,7 @@ input[type="submit"] {
     font-family: 'Tomorrow', monospace;
     cursor: pointer;
     box-shadow: 0 0 10px #00ffea;
-    transition: background 0.3s, box-shadow 0.3s;
+    transition: box-shadow 0.2s;
 }
 .theme-button:hover,
 input[type="submit"]:hover {

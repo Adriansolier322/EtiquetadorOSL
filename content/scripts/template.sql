@@ -1,3 +1,4 @@
+-- Tabla SN
 CREATE TABLE sn (
     id INT AUTO_INCREMENT PRIMARY KEY,
     prefix VARCHAR(3) NOT NULL,
@@ -27,6 +28,26 @@ CREATE TABLE gpu (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(40) NOT NULL
 );
+
+-- Tabla pc
+CREATE TABLE pc (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cpu INT,
+    ram INT,
+    ram_type VARCHAR(10),
+    disc INT,
+    disc_type VARCHAR(10),
+    gpu INT,
+    sn INT,
+    obser TEXT,
+    FOREIGN KEY (cpu) REFERENCES cpu(id),
+    FOREIGN KEY (ram) REFERENCES ram(id),
+    FOREIGN KEY (disc) REFERENCES disc(id),
+    FOREIGN KEY (gpu) REFERENCES gpu(id),
+    FOREIGN KEY (sn) REFERENCES sn(id)
+);
+
+
 
 -- Valores por defecto para RAM
 INSERT INTO ram (capacity) VALUES("2");
