@@ -150,7 +150,7 @@ class PdfCreator:
             'gpu_name': self.gpu_name.upper(),              # Nombre de la GPU
             'wifi_bool': self.wifi,                         # 1 si tiene WiFi, 2 si no
             'bluetooth_bool': self.bluetooth,               # 1 si tiene Bluetooth, 2 si no
-            'obser': self.observaciones.upper()             # Observaciones (texto libre)
+            'obser': self.observaciones                     # Observaciones (texto libre)
         }
         # Se crea el PDF utilizando la plantilla "pdf/plantilla.pdf"
         # El archivo generado tendrá como nombre la variable name

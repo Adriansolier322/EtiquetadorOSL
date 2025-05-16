@@ -173,6 +173,7 @@ input[type="submit"] {
     cursor: pointer;
     box-shadow: 0 0 10px #00ffea;
     transition: box-shadow 0.2s;
+    margin-top: 20px;
 }
 .theme-button:hover,
 input[type="submit"]:hover {
@@ -373,7 +374,6 @@ input[type="submit"]:hover {
 
 
 
-
 .popup-btn {
     flex-grow: 1;
     text-align: left;
@@ -399,12 +399,13 @@ input[type="submit"]:hover {
     background-color: transparent;
     border: 1px solid var(--general-color);
     color: var(--general-color);
-    padding: 0.5rem 1rem;
+    padding: 10px;
     border-radius: 4px;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
     margin-top: 10px;
+    margin-left: 10px;
 
 
     display: flex;
@@ -414,7 +415,9 @@ input[type="submit"]:hover {
 
 .popup-delete-btn:hover {
     background-color: var(--radio-red);
-    color: var(--form-bg);
+}
+.popup-edit-btn:hover {
+    background-color: var(--radio-green);
 }
 
 .saved-file-item {
@@ -422,7 +425,6 @@ input[type="submit"]:hover {
     align-items: center;
     margin-bottom: 10px;
 }
-
 
 
 
@@ -449,3 +451,61 @@ input[type="submit"]:hover {
 height: 40px;
 width: 32%;
 }
+
+.cbx {
+    position: relative;
+    top: 1px;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--body-bg);
+    border-radius: 3px;
+    transition: background 0.1s ease;
+    cursor: pointer;
+    display: block;
+   }
+   
+   .cbx:hover {
+    transition: border-color 0.3s ease-in-out;
+    border-color: var(--general-color);
+   }
+   .cbx:after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 13px;
+    width: 11px;
+    height: 19px;
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    transition: all 0.2s ease;
+    transition-delay: 0.07s;
+   }
+   
+   .lbl {
+    margin-left: 5px;
+    vertical-align: middle;
+    cursor: pointer;
+   }
+   
+   #cbx:checked ~ .cbx {
+    border-color: transparent;
+    background: #00ffea;
+    animation: 0.3s;
+    box-shadow: 0 0 5px #00ffea;
+   }
+   
+   #cbx:checked ~ .cbx:after {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+   }
+   
+   .cntr {
+    position: relative;
+   }
+   
+   .hidden-xs-up {
+    display: none!important;
+   }
+   

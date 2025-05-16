@@ -5,10 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" type="text/css">
+
     <link rel="icon" type="image/jpg" href="public/favicon.ico"/>
+    <link rel="stylesheet" href="style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
+
 
     <title>Etiquetador OSL</title>
 </head>
@@ -21,25 +23,6 @@
 
         </div>
         <div class="options">
-            <!-- Nombre de la etiqueta -->
-            <div class="form-group">
-                <label for="ticket_name">Nombre del ticket:</label>
-                <input type="text" placeholder="Escribir nombre del ticket en caso de guardado" id="ticket_name" name="ticket_name">
-            </div>
-            <button class="options-btn-save" onclick="save()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="8" y="8" width="48" height="48" rx="2" ry="2"/>
-                <rect x="24" y="8" width="16" height="12"/>
-                <rect x="20" y="40" width="24" height="16"/>
-                </svg>
-            Guardar
-            </button>
-            <button class="options-btn" onclick="load()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
-                </svg>
-            Cargar
-            </button>
             <button class="options-btn" onclick="loadModel()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M8 20C8 18.8954 8.89543 18 10 18H26L30 22H54C55.1046 22 56 22.8954 56 24V46C56 47.1046 55.1046 48 54 48H10C8.89543 48 8 47.1046 8 46V20Z"/>
@@ -213,8 +196,18 @@
                     <label for="observaciones">Observaciones:</label>
                     <textarea id="observaciones" name="observaciones" rows="4" cols="50" placeholder="NO poner más de 5 lineas" maxlength=120></textarea>
                 </div>
-
-                <input type="submit" value="Generar Preview" onclick="reload_iframe()">
+                <hr>
+                
+                <!-- Guardado del model -->
+                <div class="form-group">
+                    <label for="cbx">Deseas guardar el modelo:</label>
+                    <div class="cntr line">
+                        <input type="checkbox" id="cbx" for="cbx" class="hidden-xs-up" name="checkbox_save" value="True">
+                        <label for="cbx" class="cbx"></label>
+                        <input type="text" placeholder="Nombre del modelo" id="ticket_name" name="ticket_name" maxlength="20">
+                    </div>
+                </div>
+                <input type="submit" value="Generar Preview">
             </form>
         </div>
 

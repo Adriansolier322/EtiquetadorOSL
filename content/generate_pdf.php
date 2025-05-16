@@ -25,6 +25,8 @@ $data = [
     'sn_prefix'           => strtoupper($_POST['sn_prefix'] ?? ''),
     'sn_prefix_other'     => strtoupper($_POST['sn_prefix_other'] ?? ''),
     'num_pag'             => $_POST['num_pag'] ?? '',
+    'checkbox_save'       => $_POST['checkbox_save'] ?? '',
+    'ticket_name'         => $_POST['ticket_name'] ?? '',
     'observaciones'       => $_POST['observaciones'] ?? ''
 ];
 
@@ -80,7 +82,6 @@ $total_pages = $is_single=="true" ? 1 : $num_pag;
 
 // Insertar datos en la tabla pc para cada etiqueta generada
 for ($i = 1; $i <= $num_pag; $i++) {
-
     $is_last = ($i === $total_pages);
     $end = $is_last ? "true" : "false";
 
@@ -98,19 +99,20 @@ for ($i = 1; $i <= $num_pag; $i++) {
     $sn_id = $conn->lastInsertId();
 
     // Insertar en la tabla pc
-    $stmt = $conn->prepare("INSERT INTO pc (cpu, ram, ram_type, disc, disc_type, gpu, sn, obser) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO pc (board_type, cpu_name, ram_capacity, ram_type, disc_capacity, disc_type, gpu_name, gpu_type, wifi, bluetooth, obser) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
+        $data['board_type'],
         $cpu_id,
         $ram_id,
         $data['ram_type'],
         $disc_id,
         $data['disc_type'],
         $gpu_id,
-        $sn_id,
+        $data['gpu_type'],
+        $data['wifi'],
+        $data['bluetooth'],
         $data['observaciones']
     ]);
-
 
     // Escapar solo una vez en la primera iteración (optimización)
     if ($i === 1) {
@@ -148,6 +150,18 @@ for ($i = 1; $i <= $num_pag; $i++) {
     $clean = "false"; // Solo la primera vez es true
 
 }
+
+
+if ($data['checkbox_save'] == 'True') {
+
+    $stmt = $conn->prepare("SELECT MAX(id) AS last_num FROM pc");
+    $stmt->execute();
+    $last_num = $stmt->fetch(PDO::FETCH_ASSOC)['last_num'];
+
+    $stmt = $conn->prepare("INSERT INTO models (name, model) VALUES (?, ?)");
+    $stmt->execute([$data['ticket_name'], $last_num]);
+}
+
 
 sleep(0.1);
 header("Location: index.php"); // Comenta esta línea si estás haciendo pruebas

@@ -1,6 +1,31 @@
 <?php
 include ("../configuration.php");
-$stmt = $conn->prepare("SELECT pc.id, cpu.name AS cpu_name, ram.capacity AS ram_capacity, pc.ram_type, disc.capacity AS disc_capacity, pc.disc_type, gpu.name AS gpu_name, CONCAT(sn.prefix, LPAD(sn.num, 4, '0')) AS serial_number, pc.obser FROM pc JOIN cpu ON pc.cpu = cpu.id JOIN ram ON pc.ram = ram.id JOIN disc ON pc.disc = disc.id JOIN gpu ON pc.gpu = gpu.id JOIN sn ON pc.sn = sn.id");
+header('Content-Type: application/json');
+
+$stmt = $conn->prepare("SELECT 
+    pc.id, 
+    cpu.name AS cpu_name, 
+    ram.capacity AS ram_capacity, 
+    pc.ram_type, 
+    disc.capacity AS disc_capacity, 
+    pc.disc_type, 
+    gpu.name AS gpu_name, 
+    pc.gpu_type,
+    pc.wifi,
+    pc.bluetooth,
+    pc.obser
+
+FROM 
+    pc
+JOIN 
+    cpu ON pc.cpu_name = cpu.id
+JOIN 
+    ram ON pc.ram_capacity = ram.id
+JOIN 
+    disc ON pc.disc_capacity = disc.id
+JOIN 
+    gpu ON pc.gpu_name = gpu.id
+");
 if($stmt-> execute()){
     $result = $stmt->fetchAll();
     echo json_encode($result);

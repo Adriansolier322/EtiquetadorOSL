@@ -32,21 +32,30 @@ CREATE TABLE gpu (
 -- Tabla pc
 CREATE TABLE pc (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    cpu INT,
-    ram INT,
+    board_type VARCHAR(4),
+    cpu_name INT,
+    ram_capacity INT,
     ram_type VARCHAR(10),
-    disc INT,
+    disc_capacity INT,
     disc_type VARCHAR(10),
-    gpu INT,
-    sn INT,
+    gpu_name INT,
+    gpu_type VARCHAR(10),
+    wifi VARCHAR(7),
+    bluetooth VARCHAR(8),
     obser TEXT,
-    FOREIGN KEY (cpu) REFERENCES cpu(id),
-    FOREIGN KEY (ram) REFERENCES ram(id),
-    FOREIGN KEY (disc) REFERENCES disc(id),
-    FOREIGN KEY (gpu) REFERENCES gpu(id),
-    FOREIGN KEY (sn) REFERENCES sn(id)
+    FOREIGN KEY (cpu_name) REFERENCES cpu(id),
+    FOREIGN KEY (ram_capacity) REFERENCES ram(id),
+    FOREIGN KEY (disc_capacity) REFERENCES disc(id),
+    FOREIGN KEY (gpu_name) REFERENCES gpu(id)
 );
 
+-- Tabla models
+CREATE TABLE models (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20) NOT NULL,
+    model INT NOT NULL,
+    FOREIGN KEY (model) REFERENCES pc(id)
+);
 
 
 -- Valores por defecto para RAM
@@ -67,4 +76,4 @@ INSERT INTO disc (capacity) VALUES("750");
 INSERT INTO disc (capacity) VALUES("1000");
 
 -- Valores por defecto para SN
-INSERT INTO sn (prefix,num) VALUES("OSL", 0)
+INSERT INTO sn (prefix,num) VALUES("OSL", 0);

@@ -1,5 +1,7 @@
 <?php
 include ("../configuration.php");
+header('Content-Type: application/json');
+
 $stmt = $conn->prepare("SELECT * FROM sn");
 if($stmt-> execute()){
     $result = $stmt->fetchAll();

@@ -1,8 +1,3 @@
-
-function disableSaveAsk(){
-    window.onbeforeunload = null;
-}
-
 document.addEventListener('DOMContentLoaded', () => {
 
     const toggle = document.getElementById('theme-toggle');
@@ -26,236 +21,83 @@ document.addEventListener('DOMContentLoaded', () => {
     
     });
     
+
+    });
+
+function disableSaveAsk(){
+    window.onbeforeunload = null;
     refresh_iframe()
-    });
-    function refresh_iframe() {
-        const iframe = document.getElementById('iframe_preview');
-        
-        fetch('pdf/generado.pdf', { method: 'HEAD' })
-            .then(response => {
-                if (response.ok) {
-                    return nuevaRuta = 'pdf/generado.pdf';
-                } else {
-                    return nuevaRuta = 'pdf/etiqueta_preview.pdf';
-                }
-            })
-            .then(data => {
-                // Añadir timestamp para evitar caché
-                iframe.src = `${data}?t=${Date.now()}`;
-            })
-
-      }
-      
-
-    function save() {
-      Swal.fire({
-          title: '¿Estás seguro?',
-          text: "Se guardará la última preview generada",
-          showCancelButton: true,
-          confirmButtonText: 'Aceptar',
-          cancelButtonText: 'Cancelar',
-          icon: "question",
-          customClass: {
-              popup: 'my-popup-class',
-              confirmButton: 'my-confirm-button',
-              cancelButton: 'my-cancel-button'
-          }
-      }).then((result) => {
-          if (result.isConfirmed) {
-              const name = document.getElementById('ticket_name').value.trim();
-              
-              if (!name) {
-                  alert('Por favor, ingresa un nombre válido');
-                  return;
-              }
-              
-              // Enviar el nombre al servidor para guardar el PDF
-              const formData = new FormData();
-              formData.append('ticket_name', name);
-              
-              fetch('save_pdf.php', {
-                  method: 'POST',
-                  body: formData
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      Swal.fire({
-                          title: '¡Guardado exitosamente!',
-                          icon: "success",
-                          customClass: {
-                              popup: 'my-popup-class',
-                              confirmButton: 'my-confirm-button'
-                          }
-                      });
-                  } else {
-                      Swal.fire({
-                          title: 'Error',
-                          text: data.message,
-                          icon: 'error',
-                          customClass: {
-                            popup: 'my-popup-class',
-                            confirmButton: 'my-confirm-button',
-                            cancelButton: 'my-cancel-button'
-                          }
-                      });
-                  }
-              });
-          }
-      });
-  }
-    
-  function load() {
-    fetch('get_saved_pdfs.php')
-        .then(response => response.json())
-        .then(pdfs => {
-            const htmlButtons = pdfs.map(pdf => {
-                return `
-                    <div class="saved-file-item">
-                        <button class="popup-btn" onclick="loadPdf('${pdf.path}')">${pdf.name}</button>
-                        <button class="popup-delete-btn" onclick="deletePdf('${pdf.path}', this)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-            }).join('');
-
-            Swal.fire({
-                title: 'Archivos guardados',
-                html: htmlButtons,
-                showConfirmButton: false,
-                customClass: {
-                  popup: 'my-popup-class',
-                  confirmButton: 'my-confirm-button',
-                  cancelButton: 'my-cancel-button'
-                }
-            });
-        });
-}
-  
-  function loadPdf(pdfPath) {
-      // Actualizar el iframe con el PDF seleccionado
-      const iframe = document.querySelector('.preview iframe');
-      iframe.src = pdfPath + '#toolbar=0#view=Fit';
-      
-      // Cerrar el popup
-      Swal.close();
-  }
-    
-  function deletePdf(pdfPath) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "¡No podrás revertir esto!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, borrarlo',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-          popup: 'my-popup-class',
-          confirmButton: 'my-confirm-button',
-          cancelButton: 'my-cancel-button'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('delete_save_pdf.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ path: pdfPath })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    
-                    
-                    Swal.fire({
-                      title: "¡Borrado!",
-                      text: "El archivo ha sido eliminado.",
-                      icon: "success",
-                      customClass: {
-                        popup: 'my-popup-class',
-                        confirmButton: 'my-confirm-button',
-                        cancelButton: 'my-cancel-button'
-                      }
-                    });
-                } else {
-                    Swal.fire({
-                      title: "Error",
-                      text: "No se pudo eliminar el archivo",
-                      icon: "error",
-                      customClass: {
-                        popup: 'my-popup-class',
-                        confirmButton: 'my-confirm-button',
-                        cancelButton: 'my-cancel-button'
-                      }
-                    });
-                }
-            });
-        }
-    });
 }
 
+function refresh_iframe() {
+    const iframe = document.getElementById('iframe_preview');
+    
+    fetch('pdf/generado.pdf', { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                return nuevaRuta = 'pdf/generado.pdf';
+            } else {
+                return nuevaRuta = 'pdf/etiqueta_preview.pdf';
+            }
+        })
+        .then(data => {
+            // Añadir timestamp para evitar caché
+            iframe.src = `${data}?t=${Date.now()}`;
+        })
+
+}
+      
 
 
 // Función para cargar y mostrar modelos
 function loadModel() {
     try {
-        // Obtener modelos guardados del localStorage
-        let savedModels = JSON.parse(localStorage.getItem('savedModels')) || {};
-
-        // Crear HTML para los botones de modelos
+    fetch('get_saved_models.php')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta');
+        }
+        return response.json();
+    })
+    .then(data => {
         let htmlButtons = '';
-        Object.keys(savedModels).forEach(modelName => {
+        data.forEach(model => {
             htmlButtons += `
                 <div class="saved-file-item">
-                    <button class="popup-btn" onclick="applyModel('${modelName.replace(/'/g, "\\'")}')">${modelName}</button>
-                    <button class="popup-delete-btn" onclick="deleteModel('${modelName.replace(/'/g, "\\'")}', this)">
+                    <button class="popup-btn" onclick="applyModel('${model.model}')">${model.name}</button>
+                    <button class="popup-delete-btn popup-edit-btn" onclick="editModelName('${model.name}', '${model.id}', this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" id="_24x24_On_Light_Edit" data-name="24x24/On Light/Edit" xmlns="http://www.w3.org/2000/svg">
+                        <rect id="view-box" width="16" height="16" fill="none"/>
+                        <path id="Shape" d="M.75,17.5A.751.751,0,0,1,0,16.75V12.569a.755.755,0,0,1,.22-.53L11.461.8a2.72,2.72,0,0,1,3.848,0L16.7,2.191a2.72,2.72,0,0,1,0,3.848L5.462,17.28a.747.747,0,0,1-.531.22ZM1.5,12.879V16h3.12l7.91-7.91L9.41,4.97ZM13.591,7.03l2.051-2.051a1.223,1.223,0,0,0,0-1.727L14.249,1.858a1.222,1.222,0,0,0-1.727,0L10.47,3.91Z" transform="translate(3.25 3.25)" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="popup-delete-btn" style="padding: 12px;" onclick="deleteModel('${model.name}', '${model.id}', this)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 6h18"></path>
                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                         </svg>
                     </button>
+
                 </div>
+                <hr>
             `;
-        });
-
-        // Añadir sección para guardar nuevo modelo
-        htmlButtons += `
-            <div style="margin-top: 20px; align-items: center;">
-                <input type="text" id="newModelName" placeholder="Nombre del nuevo modelo" class="model-input">
-                <button class="options-btn-save save-model-btn" onclick="saveCurrentModel()">
-                    Guardar modelo actual
-                </button>
-            </div>
-        `;
-
+        })
+        return htmlButtons;
+    })
+    .then(data => {
         // Mostrar el popup con SweetAlert
         Swal.fire({
             title: 'Modelos guardados',
-            html: htmlButtons,
+            html: data,
             showConfirmButton: false,
             width: '600px',
             customClass: {
                 popup: 'my-popup-class',
                 confirmButton: 'my-confirm-button',
                 cancelButton: 'my-cancel-button'
-            },
-            didOpen: () => {
-                // Asegurar que los eventos se asignan correctamente
-                document.querySelectorAll('.popup-btn').forEach(btn => {
-                    btn.onclick = function() {
-                        const modelName = this.textContent.trim();
-                        if (modelName === 'Guardar modelo actual') return;
-                        applyModel(modelName);
-                    };
-                });
             }
-        });
-
+        })
+    })
     } catch (error) {
         console.error('Error en loadModel:', error);
         Swal.fire({
@@ -271,48 +113,46 @@ function loadModel() {
 }
 
 // Función para aplicar un modelo al formulario
-function applyModel(modelName) {
+function applyModel(modelId) {
     try {
-        const savedModels = JSON.parse(localStorage.getItem('savedModels')) || {};
-        const model = savedModels[modelName];
-        
-        if (!model) {
-            console.error('Modelo no encontrado:', modelName);
-            return;
+        // Hacer una petición al archivo PHP
+        fetch(`get_model.php?modelId=${encodeURIComponent(modelId)}`)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta');
         }
-
-        // Llenar los campos del formulario
-        document.getElementById('board_type').value = model.board_type || 'bios';
-        document.getElementById('cpu_name').value = model.cpu_name || 'Indefinido';
-        document.getElementById('ram_capacity').value = model.ram_capacity || 'Indefinido';
-        document.getElementById('ram_type').value = model.ram_type || 'ddr4';
-        document.getElementById('disc_capacity').value = model.disc_capacity || 'Indefinido';
-        document.getElementById('disc_type').value = model.disc_type || 'hdd';
-        document.getElementById('gpu_name').value = model.gpu_name || 'Indefinido';
-        document.getElementById('gpu_type').value = model.gpu_type || 'integrada';
-        
-        // Radio buttons
-        if (model.wifi === 'true') {
-            document.getElementById('wifi_si').checked = true;
-        } else {
-            document.getElementById('wifi_no').checked = true;
-        }
-        
-        if (model.bluetooth === 'true') {
-            document.getElementById('bluetooth_si').checked = true;
-        } else {
-            document.getElementById('bluetooth_no').checked = true;
-        }
-        
-        // Otros campos
-        document.getElementById('sn_prefix').value = model.sn_prefix || '';
-        document.getElementById('num_pag').value = model.num_pag || '1';
-        document.getElementById('observaciones').value = model.observaciones || '';
-        
-        // Actualizar la selección visual de los radio buttons
-        updateRadioSelection('wifi');
-        updateRadioSelection('bluetooth');
-        
+        return response.json();
+        })
+        .then(data => {
+            data.forEach(model =>{
+                // Aquí tienes acceso a los datos
+                console.log(model)
+                document.getElementById('board_type').value = model.board_type || 'bios';
+                document.getElementById('cpu_name').value = model.cpu_name || 'Indefinido';
+                document.getElementById('ram_capacity').value = model.ram_capacity || 'Indefinido';
+                document.getElementById('ram_type').value = model.ram_type || 'ddr2';
+                document.getElementById('disc_capacity').value = model.disc_capacity || 'Indefinido';
+                document.getElementById('disc_type').value = model.disc_type || 'hdd';
+                document.getElementById('gpu_name').value = model.gpu_name || 'Indefinido';
+                document.getElementById('gpu_type').value = model.gpu_type || 'integrada';
+                document.getElementById('observaciones').value = model.obser || '';
+                // Radio buttons
+                if (model.wifi === 'true') {
+                    document.getElementById('wifi_si').checked = true;
+                } else {
+                    document.getElementById('wifi_no').checked = true;
+                }
+                
+                if (model.bluetooth === 'true') {
+                    document.getElementById('bluetooth_si').checked = true;
+                } else {
+                    document.getElementById('bluetooth_no').checked = true;
+                }
+                // Actualizar la selección visual de los radio buttons
+                updateRadioSelection('wifi');
+                updateRadioSelection('bluetooth');
+            })
+        })
         Swal.close();
         
     } catch (error) {
@@ -320,85 +160,11 @@ function applyModel(modelName) {
     }
 }
 
-// Función para guardar el modelo actual
-function saveCurrentModel() {
-    try {
-        const modelNameInput = document.getElementById('newModelName');
-        if (!modelNameInput) {
-            console.error('No se encontró el campo newModelName');
-            return;
-        }
-
-        const modelName = modelNameInput.value.trim();
-        if (!modelName) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor, ingresa un nombre para el modelo',
-                icon: 'warning',
-                customClass: {
-                    popup: 'my-popup-class',
-                    confirmButton: 'my-confirm-button'
-                }
-            });
-            return;
-        }
-
-        // Recopilar datos del formulario
-        const formData = {
-            board_type: document.getElementById('board_type').value,
-            cpu_name: document.getElementById('cpu_name').value,
-            ram_capacity: document.getElementById('ram_capacity').value,
-            ram_type: document.getElementById('ram_type').value,
-            disc_capacity: document.getElementById('disc_capacity').value,
-            disc_type: document.getElementById('disc_type').value,
-            gpu_name: document.getElementById('gpu_name').value,
-            gpu_type: document.getElementById('gpu_type').value,
-            wifi: document.querySelector('input[name="wifi"]:checked')?.value || 'false',
-            bluetooth: document.querySelector('input[name="bluetooth"]:checked')?.value || 'false',
-            sn_prefix: document.getElementById('sn_prefix').value,
-            num_pag: document.getElementById('num_pag').value,
-            observaciones: document.getElementById('observaciones').value
-        };
-
-        // Guardar en localStorage
-        const savedModels = JSON.parse(localStorage.getItem('savedModels')) || {};
-        savedModels[modelName] = formData;
-        localStorage.setItem('savedModels', JSON.stringify(savedModels));
-
-        // Cerrar y mostrar mensaje
-        Swal.fire({
-            title: '¡Modelo guardado!',
-            text: `El modelo "${modelName}" ha sido guardado correctamente.`,
-            icon: 'success',
-            customClass: {
-                popup: 'my-popup-class',
-                confirmButton: 'my-confirm-button'
-            }
-        }).then(() => {
-            // Recargar la lista de modelos
-            loadModel();
-        });
-
-    } catch (error) {
-        console.error('Error en saveCurrentModel:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error al guardar el modelo',
-            icon: 'error',
-            customClass: {
-                popup: 'my-popup-class',
-                confirmButton: 'my-confirm-button'
-            }
-        });
-    }
-}
-
 // Función para eliminar un modelo
-function deleteModel(modelName, buttonElement) {
+function deleteModel(modelName, modelId, buttonElement) {
     Swal.fire({
         title: '¿Estás seguro?',
         text: `¿Quieres eliminar el modelo "${modelName}"?`,
-        icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Sí, borrarlo',
         cancelButtonText: 'Cancelar',
@@ -410,10 +176,8 @@ function deleteModel(modelName, buttonElement) {
     }).then((result) => {
         if (result.isConfirmed) {
             try {
-                const savedModels = JSON.parse(localStorage.getItem('savedModels')) || {};
-                delete savedModels[modelName];
-                localStorage.setItem('savedModels', JSON.stringify(savedModels));
-                
+                fetch(`delete_save_model.php?modelId=${encodeURIComponent(modelId)}`)
+            
                 // Eliminar el elemento del DOM
                 if (buttonElement && buttonElement.closest('.saved-file-item')) {
                     buttonElement.closest('.saved-file-item').remove();
@@ -449,3 +213,47 @@ function updateRadioSelection(name) {
     }
 }
 
+function editModelName(modelName, modelId) {
+    Swal.close()
+    const form = `<div class="saved-file-item">
+                    <input type="text" placeholder="Nombre nuevo" id="nameChange" autofocus maxlength=20>
+                </div>`;
+    
+
+
+    Swal.fire({
+        title: `Editar nombre del modelo "${modelName}"`,
+        html: form,
+        showCancelButton: true,
+        confirmButtonText: 'Cambiar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            popup: 'my-popup-class',
+            confirmButton: 'my-confirm-button',
+            cancelButton: 'my-cancel-button'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            try {
+                const newName = document.getElementById("nameChange").value
+                fetch(`edit_model_name.php?modelId=${encodeURIComponent(modelId)}&modelName=${encodeURIComponent(newName)}`)
+                
+                Swal.fire({
+                    title: '¡Nombre cambiado con exito',
+                    text: `Nombre cambiado a "${newName}".`,
+                    icon: 'success',
+                    customClass: {
+                        popup: 'my-popup-class',
+                        confirmButton: 'my-confirm-button'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed){
+                        loadModel()
+                    }
+                })
+            } catch (error) {
+                console.error('Error en editmodel:', error);
+            }
+        }
+    });
+}
