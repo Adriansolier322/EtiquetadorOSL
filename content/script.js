@@ -199,19 +199,6 @@ function deleteModel(modelName, modelId, buttonElement) {
     });
 }
 
-// Función auxiliar para actualizar radio buttons
-function updateRadioSelection(name) {
-    const radioInput = document.querySelector(`input[name="${name}"]:checked`)?.closest('.radio-input');
-    if (radioInput) {
-        const selection = radioInput.querySelector('.selection');
-        if (selection) {
-            const isTrue = document.querySelector(`input[name="${name}"]:checked`).value === 'true';
-            selection.style.transform = isTrue ? 'translateX(0%)' : 'translateX(100%)';
-            selection.style.backgroundColor = isTrue ? getComputedStyle(document.documentElement).getPropertyValue('--radio-green') : 
-                                                     getComputedStyle(document.documentElement).getPropertyValue('--radio-red');
-        }
-    }
-}
 
 function editModelName(modelName, modelId) {
     Swal.close()
