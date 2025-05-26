@@ -44,7 +44,7 @@ sudo apt install mariadb-server -y
 sudo apt install php libapache2-mod-php php-mysql -y
 ```
 
-## Paso 5: Instalar Python y libreria fillpdf
+## Paso 5: Instalar Python y librerias
 ```bash
 sudo apt install python3 python3-pip
 sudo pip install --break-system-packages fillpdf
