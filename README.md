@@ -69,6 +69,11 @@ sudo mkdir /var/www/etiquetador
 sudo cp EtiquetadorOSL/content/* /var/www/etiquetador/
 sudo cp /etc/apache2/sites-avaliable/000-default.conf /etc/apache2/sites-avaliable/etiquetador.conf
 sudo nano /etc/apache2/sites-avaliable/etiquetador.conf
+
+# Añadir carpetas para la generacion de archivos pdf
+sudo mkdir /var/www/etiquetador/pdf/finalraid
+sudo mkdir /var/www/etiquetador/pdf/qrcode
+sudo mkdir /var/www/etiquetador/pdf/raid
 ```
 Dentro de este nuevo archivo de configuración debemos cambiar la linea `DocumentRoot /var/www/html` por `DocumentRoot /var/www/etiquetador`
 
