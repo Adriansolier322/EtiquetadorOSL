@@ -6,6 +6,9 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+$url .= "://".$_SERVER['HTTP_HOST']."/";
+
 // Obtener datos del formulario con valores por defecto
 $data = [
     'board_type'          => $_POST['board_type'] ?? '',
@@ -85,7 +88,8 @@ for ($i = 1; $i <= $num_pag; $i++) {
     $is_last = ($i === $total_pages);
     $end = $is_last ? "true" : "false";
 
-    $name = $is_single=="true" ? "pdf/generado.pdf" : "pdf/raid/generado{$i}.pdf";
+    $name = "pdf/raid/generado{$i}.pdf";
+    $qrcode_name = "pdf/qrcodes/qrcode{$i}.png";
 
     // Obtener el siguiente número de serie
     $stmt = $conn->prepare("SELECT MAX(num) AS last_num FROM sn WHERE prefix = ?");
@@ -113,6 +117,8 @@ for ($i = 1; $i <= $num_pag; $i++) {
         $data['bluetooth'],
         $data['observaciones']
     ]);
+    $pc_id = $conn->lastInsertId();
+    $pc_url = "$url"."render_model.php?modelId=$pc_id";
 
     // Escapar solo una vez en la primera iteración (optimización)
     if ($i === 1) {
@@ -130,23 +136,27 @@ for ($i = 1; $i <= $num_pag; $i++) {
             $prefix,
             $sn_num,
             $name,
+            $qrcode_name,
             $end,
             $is_single,
             $clean,
+            $pc_url,
             $data['observaciones']
         ]);
     } else {
         $escaped[10] = escapeshellarg($prefix);     // prefix
         $escaped[11] = escapeshellarg($sn_num);     // sn_num
         $escaped[12] = escapeshellarg($name);       // name
-        $escaped[13] = escapeshellarg($end);        // end
-        $escaped[15] = escapeshellarg($clean);      // clean
+        $escaped[13] = escapeshellarg($qrcode_name);// qrcode_name
+        $escaped[14] = escapeshellarg($end);        // end
+        $escaped[15] = escapeshellarg($pc_id);      // pc_id
+        $escaped[16] = escapeshellarg($clean);      // clean
     }
 
     // Ejecutar comando
     $command = "python3 scripts/pdfgenerator.py " . implode(' ', $escaped);
     $output = shell_exec($command);
-    
+
     $clean = "false"; // Solo la primera vez es true
 
 }

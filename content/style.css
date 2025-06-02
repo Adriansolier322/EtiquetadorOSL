@@ -509,3 +509,39 @@ width: 32%;
     display: none!important;
    }
    
+
+   .tabla-modelo {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--form-bg);
+    color: var(--general-color);
+    font-family: 'Tomorrow', monospace;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 12px var(--form-bg);
+    }
+
+    .tabla-modelo th, .tabla-modelo td {
+
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--body-bg);
+        text-align: left;
+    }
+
+    .tabla-modelo th {
+        text-align: right;
+        background-color: var(--body-bg);
+        color: var(--h1);
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    h2 {
+        color: var(--h1);
+        text-align: center;
+    }

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const toggle = document.getElementById('theme-toggle');
 
     const userPref = localStorage.getItem('theme');
@@ -7,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add(userPref);
     } else {
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
+            document.body.classList.add('dark');
         } else {
-        document.body.classList.add('light');
+            document.body.classList.add('light');
         }
     }
 
@@ -18,11 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('light');
         const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
         localStorage.setItem('theme', currentTheme);
-    
     });
-    
 
-    });
+
+});
+
+
+
 
 function disableSaveAsk(){
     window.onbeforeunload = null;
