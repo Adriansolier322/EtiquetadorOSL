@@ -79,7 +79,6 @@ $num_pag = (int)$data['num_pag'];
 
 $clean = "true";
 
-$num_pag = (int)($data['num_pag']);
 $is_single = $num_pag < 2 ? "true" : "false";
 $total_pages = $is_single=="true" ? 1 : $num_pag;
 
