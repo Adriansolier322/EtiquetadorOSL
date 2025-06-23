@@ -100,7 +100,7 @@ for ($i = 1; $i <= $num_pag; $i++) {
     $stmt = $conn->prepare("INSERT INTO sn (prefix, num) VALUES (?, ?)");
     $stmt->execute([$data['sn_prefix'], $sn_num]);
     $sn_id = $conn->lastInsertId();
-
+    
     // Insertar en la tabla pc
     $stmt = $conn->prepare("INSERT INTO pc (board_type, cpu_name, ram_capacity, ram_type, disc_capacity, disc_type, gpu_name, gpu_type, wifi, bluetooth, obser) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
@@ -118,6 +118,10 @@ for ($i = 1; $i <= $num_pag; $i++) {
     ]);
     $pc_id = $conn->lastInsertId();
     $pc_url = "$url"."render_model.php?modelId=$pc_id";
+
+    //Asociar el sn con el pc
+    $stmt = $conn->prepare("INSERT INTO sn_pc (sn_id, pc_id) VALUES (?, ?)");
+    $stmt->execute([$sn_id, $pc_id]);
 
     // Escapar solo una vez en la primera iteración (optimización)
     if ($i === 1) {
@@ -155,7 +159,6 @@ for ($i = 1; $i <= $num_pag; $i++) {
     // Ejecutar comando
     $command = "python3 scripts/pdfgenerator.py " . implode(' ', $escaped);
     $output = shell_exec($command);
-
     $clean = "false"; // Solo la primera vez es true
 
 }

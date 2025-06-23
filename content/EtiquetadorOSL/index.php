@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/jpg" href="public/favicon.ico"/>
-    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="icon" type="image/jpg" href="assets/favicon.ico"/>
+    <link rel="stylesheet" href="assets/css/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
 
 
     <title>Etiquetador OSL</title>
@@ -17,9 +17,9 @@
 <body onload="disableSaveAsk()">
     <section class="layout">
         <div class="header">
-            <img src="public/logo_UGR_horizontal.webp" width=350>
+            <img src="assets/logo_UGR_horizontal.webp" width=350>
             <h1>Generador de etiquetas</h1>
-            <img src="public/osl_logo.webp" width=300>
+            <img src="assets/osl_logo.webp" width=300>
 
         </div>
         <div class="options">
@@ -213,9 +213,8 @@
 
         <!-- Preview -->
         <div class="preview">
-
             <?php
-            echo "<iframe id='iframe_preview'src='$pdfToShow' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
+            echo "<iframe id='iframe_preview'src='' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
             ?>
 
         </div>
@@ -286,6 +285,7 @@
 
                 Cambiar Tema
             </button>
+            <a href="../Admin" class="footer-btn">Panel administración</a>
             </div>
             
         </div>

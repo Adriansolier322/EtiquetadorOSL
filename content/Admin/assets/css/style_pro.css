@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Tomorrow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Variables y Modos de Color */
+body.dark {
+    --body-bg: #727272;
+    --sidebar-bg: #2a2a2a;
+    --text-color: #eee;
+    --card-bg: #2a2a2a;
+    --card-shadow: 0 0 0px rgba(0, 255, 234, 0.2);
+    --input-bg: #212121;
+    --border-color: #3a3a3a;
+    --accent-color: #00ffea;
+    --hover-color: #00ffea;
+    --active-color: #00ccb3;
+}
+
+body.light {
+    --body-bg: #ebecee;
+    --sidebar-bg: #ffffff;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --input-bg: #ececec;
+    --border-color: #ddd;
+    --accent-color: #007bff;
+    --hover-color: #0056b3;
+    --active-color: #003d7a;
+}
+
+/* Estilos Base */
+body {
+    background-color: var(--body-bg);
+    margin: 0;
+    padding: 0;
+    font-family: 'Tomorrow', monospace;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: var(--text-color);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Sidebar mejorado */
+.sidebar {
+    width: 250px;
+    background: var(--sidebar-bg);
+    color: var(--text-color);
+    height: 100vh;
+    position: fixed;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    border-right: 1px solid var(--border-color);
+}
+
+.sidebar h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    padding: 0 20px;
+    font-size: 1.3rem;
+    color: var(--text-color);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0 10px;
+}
+
+.sidebar li {
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.sidebar li:hover {
+    background: rgba(0, 255, 234, 0.1);
+}
+
+.sidebar li.active {
+    background: rgba(0, 255, 234, 0.2);
+    border-left: 4px solid var(--accent-color);
+    margin-left: -4px;
+}
+
+.sidebar li.active a {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.sidebar a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    border-radius: 0 4px 4px 0;
+}
+
+.sidebar hr {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 15px 20px;
+}
+
+/* Main content */
+.main-content {
+    margin-left: 250px;
+    padding: 25px;
+    min-height: 100vh;
+}
+
+/* Cards */
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    color: var(--text-color);
+    font-size: 1.4rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+    font-family: 'Courier New', monospace;
+    outline: none;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+}
+
+/* Buttons */
+.btn {
+    background: var(--accent-color);
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 0 10px var(--accent-color);
+    font-family: 'Tomorrow', monospace;
+}
+
+.btn:hover {
+    background: var(--hover-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    transform: none;
+}
+
+.btn-edit {
+    background: #f39c12;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 8px;
+    transition: all 0.2s;
+    box-shadow: none;
+}
+
+.btn-edit:hover {
+    background: #e67e22;
+    box-shadow: none;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: none;
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+    box-shadow: none;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+table th, table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+table th {
+    background: var(--body-bg);
+    font-weight: 600;
+    color: var(--text-color);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+table tr:hover {
+    background-color: rgba(0, 255, 234, 0.05);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 10% auto;
+    padding: 25px;
+    border: none;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .stats-container {
+        flex-direction: column;
+    }
+}
+
+/* Utilidades */
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.5rem; }

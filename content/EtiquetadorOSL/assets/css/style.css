@@ -194,10 +194,14 @@ input[type="submit"] {
     font-size: 16px;
     box-shadow: 0 0 10px #00ffea;
     margin-top: 20px;
+    transition: all 0.10s;
+}
+
+input[type="submit"]:hover {
+    box-shadow: 0 0 15px #00ffea;
 }
 
 .theme-button:hover,
-input[type="submit"]:hover,
 .options-btn:hover,
 .footer-btn:hover,
 .popup-btn:hover {
