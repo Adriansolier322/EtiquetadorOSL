@@ -244,3 +244,11 @@ systemctl restart nginx
 ```
 Con esto ya estaria todo listo.
 
+#Configuración del primer usuario para el panel del administrador:
+Dentro de SQL, debemos de introducir los siguientes comandos:
+```sql
+USE nombre_DB
+INSERT INTO users(username,password) VALUES(‘nombreUsuario’,’hash contraseña’);
+```
+Debemos de tener en cuenta que en la parte de password, tiene que ser el hash de éste, ya que cuando nosotros en la página de registro introduzcamos el usuario y la contraseña, la contraseña se convertirá en hash para poder compararla con la que tiene en la base de datos. 
+
