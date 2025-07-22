@@ -10,6 +10,9 @@
 <body>
     <div class="login-container">
         <h1>Panel de Administración</h1>
+        <?php if(isset($_GET['registered'])): ?>
+            <div class="alert alert-success">¡Registro completado! Ya puedes iniciar sesión.</div>
+        <?php endif; ?>
         <?php if (isset($error)): ?>
             <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
@@ -24,6 +27,9 @@
             </div>
             <button type="submit" name="login" class="btn">Iniciar Sesión</button>
         </form>
+        <div style="text-align: center; margin-top: 15px;">
+            <p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
+        </div>
     </div>
 </body>
 </html>
