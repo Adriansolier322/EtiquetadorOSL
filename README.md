@@ -58,7 +58,7 @@ Una vez hayas instalado todo vamos a comenzar con la puesta en marcha.
 
 #### Descargar el proyecto
 ```bash
-sudo git clone https://github.com/Adriansolier322/EtiquetadorOSL.git
+sudo git clone ---
 ```
 esto se nos creara un directorio llamado EtiquetadorOSL.
 
@@ -69,8 +69,8 @@ esto se nos creara un directorio llamado EtiquetadorOSL.
 ```bash
 sudo mkdir /var/www/etiquetador
 sudo cp EtiquetadorOSL/content/* /var/www/etiquetador/
-sudo cp /etc/apache2/sites-avaliable/000-default.conf /etc/apache2/sites-avaliable/etiquetador.conf
-sudo nano /etc/apache2/sites-avaliable/etiquetador.conf
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/etiquetador.conf
+sudo nano /etc/apache2/sites-available/etiquetador.conf
 ```
 Dentro de este nuevo archivo de configuración debemos cambiar la linea `DocumentRoot /var/www/html` por `DocumentRoot /var/www/etiquetador`
 
@@ -168,7 +168,7 @@ Una vez hayas instalado todo vamos a comenzar con la puesta en marcha.
 
 #### Descargar el proyecto
 ```bash
-sudo git clone https://github.com/Adriansolier322/EtiquetadorOSL.git
+sudo git clone 
 ```
 esto se nos creara un directorio llamado EtiquetadorOSL.
 
@@ -179,8 +179,8 @@ esto se nos creara un directorio llamado EtiquetadorOSL.
 ```bash
 sudo mkdir /var/www/etiquetador
 sudo cp EtiquetadorOSL/content/* /var/www/etiquetador/
-sudo cp /etc/nginx/sites-avaliable/default  /etc/nginx/sites-avaliable/etiquetador
-sudo nano /etc/nginx/sites-avaliable/etiquetador
+sudo cp /etc/nginx/sites-available/default  /etc/nginx/sites-available/etiquetador
+sudo nano /etc/nginx/sites-available/etiquetador
 
 ```
 Dentro de este nuevo archivo de configuración debemos cambiar algunas cosas, el fichero se nos debería de quedar de la siguiente forma:
