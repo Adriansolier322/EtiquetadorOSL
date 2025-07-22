@@ -29,7 +29,7 @@ http://localhost
 
 Deberías ver la página de bienvenida de Apache (si no funciona prueba cambiando localhost por la ip de la maquina donde lo has instalado).
 
-##### En el caso de usar nginx:
+#### En el caso de usar nginx:
 
 ```bash
 sudo apt install nginx -y
