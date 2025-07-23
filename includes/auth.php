@@ -1,54 +1,54 @@
 <?php
+// This line includes config.php, which already calls session_start()
 include 'config.php';
 
-// Verificar si el usuario está logueado
-function isLoggedIn() {
-    return isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
-}
+// Initialize error message variable
+$error = '';
 
-// Redirigir si no está logueado
-function checkAuth() {
-    if (!isLoggedIn()) {
-        header("Location: login.php");
-        exit;
-    }
+// Check if the user is already logged in (optional, but good practice)
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    header("Location: EtiquetadorOSL/index.php");
+    exit;
 }
 
 // Procesar login
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    
-    // Validar que los campos no estén vacíos
+
+    // Validate that fields are not empty
     if (empty($username) || empty($password)) {
-        $error = "Por favor, complete todos los campos";
+        $error = "Por favor, complete todos los campos.";
     } else {
         try {
-            // Buscar el usuario en la base de datos
-            $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = ?");
+            // Find the user in the database, including their rol_id
+            $stmt = $pdo->prepare("SELECT id, username, password, rol_id FROM users WHERE username = ?");
             $stmt->execute([$username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            // Verificar si el usuario existe y la contraseña es correcta
+
+            // Verify if user exists and password is correct
             if ($user && password_verify($password, $user['password'])) {
-               if($user['rol_id'] == 1){ // Si es admin
+               // Check if rol_id is set and is 1 (admin)
+               if(isset($user['rol_id']) && $user['rol_id'] == 1){
                    $_SESSION['loggedin'] = true;
                    $_SESSION['user_id'] = $user['id'];
                    $_SESSION['username'] = $user['username'];
-                   $_SESSION['rol_id'] = $user['rol_id']; // Guardar el rol del usuario
-                   // Redirigir al usuario
-                    header("Location: EtiquetadorOSL/index.php");
-                    exit;
-                }
-                else{
-                    $error = "No tienes permisos para acceder a esta área.";
-                    exit;
-                }
+                   $_SESSION['rol_id'] = $user['rol_id']; // Store user role
+
+                   // Redirect the user
+                   header("Location: EtiquetadorOSL/index.php");
+                   exit; // Crucial to stop script execution after redirect
+               } else {
+                   $error = "No tienes permisos para acceder a esta área.";
+               }
             } else {
-                $error = "Credenciales incorrectas";
+                $error = "Credenciales incorrectas.";
             }
         } catch (PDOException $e) {
-            $error = "Error al conectar con la base de datos: " . $e->getMessage();
+            // Log the error for debugging, but don't show sensitive info to user
+            // error_log("Database Error: " . $e->getMessage());
+            $error = "Error al conectar con la base de datos o al procesar la solicitud.";
         }
     }
 }
+?>
