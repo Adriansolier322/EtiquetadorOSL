@@ -90,7 +90,7 @@ esto se nos creara un directorio llamado EtiquetadorOSL.
 
 ```bash
 sudo mkdir /var/www/etiquetador
-sudo cp EtiquetadorOSL/content/* /var/www/etiquetador/
+sudo cp -r EtiquetadorOSL/content/* /var/www/etiquetador/
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/etiquetador.conf
 sudo nano /etc/apache2/sites-available/etiquetador.conf
 ```
@@ -99,7 +99,7 @@ Dentro de este nuevo archivo de configuración debemos cambiar la linea `Documen
 #### Configuración de nginx(en caso de usarlo)
 ```bash
 sudo mkdir /var/www/etiquetador
-sudo cp EtiquetadorOSL/content/* /var/www/etiquetador/
+sudo cp -r EtiquetadorOSL/content/* /var/www/etiquetador/
 sudo cp /etc/nginx/sites-available/default  /etc/nginx/sites-available/etiquetador
 sudo nano /etc/nginx/sites-available/etiquetador
 
