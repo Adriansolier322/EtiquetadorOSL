@@ -286,6 +286,21 @@
                 Cambiar Tema
             </button>
             <a href="../Admin" class="footer-btn">Panel administración</a>
+
+            <a href="logout.php" class="footer-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="22" height="22" fill="currentColor" stroke="none">
+                    <path d="M48 24C48 21.7909 46.2091 20 44 20H20C17.7909 20 16 21.7909 16 24V40C16 42.2091 17.7909 44 20 44H44C46.2091 44 48 42.2091 48 40V24Z"/>
+                    <path d="M32 4L32 10"/>
+                    <path d="M32 54L32 60"/>
+                    <path d="M4 32L10 32"/>
+                    <path d="M54 32L60 32"/>
+                    <path d="M11.6669 11.6669L15.2025 15.2025"/>
+                    <path d="M48.7975 48.7975L52.3331 52.3331"/>
+                    <path d="M11.6669 52.3331L15.2025 48.7975"/>
+                    <path d="M48.7975 15.2025L52.3331 11.6669"/>
+                </svg>
+                Cerrar Sesión
+            </a>
             </div>
             
         </div>

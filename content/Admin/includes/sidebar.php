@@ -11,7 +11,7 @@
         <hr>
         <li><a href="users.php">Gestionar usuarios</a></li>
         <li><a href="../EtiquetadorOSL">Volver al etiquetador</a></li>
-        <li><a href="logout.php">Cerrar Sesión</a></li>
+        <li><a href="../logout.php">Cerrar Sesión</a></li>
     </ul>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

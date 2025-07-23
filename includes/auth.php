@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             // Verify if user exists and password is correct
             if ($user && password_verify($password, $user['password'])) {
                // Check if rol_id is set and is 1 (admin)
-               if(isset($user['rol_id']) && $user['rol_id'] == 1){
+               //if(isset($user['rol_id']) && $user['rol_id'] == 1){
                    $_SESSION['loggedin'] = true;
                    $_SESSION['user_id'] = $user['id'];
                    $_SESSION['username'] = $user['username'];
@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                    // Redirect the user
                    header("Location: EtiquetadorOSL/index.php");
                    exit; // Crucial to stop script execution after redirect
-               } else {
-                   $error = "No tienes permisos para acceder a esta área.";
-               }
+              // } else {
+             //      $error = "No tienes permisos para acceder a esta área.";
+               //}
             } else {
                 $error = "Credenciales incorrectas.";
             }
