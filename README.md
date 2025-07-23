@@ -1,6 +1,6 @@
 # Guía de instalación del Etiquetador OSL
 > [!Warning]  
-> Esta guía se ha hecho sobre un sistema basado en debian (ubuntu 24.04.2 LTS), pero tambien es compatible con multiples sistemas incluidos sistemas windows.  
+> Esta guía se ha hecho sobre un sistema basado en debian (ubuntu 24.04.2 LTS).  
 
 ### Instalación 
 
@@ -84,11 +84,15 @@ esto se nos creara un directorio llamado EtiquetadorOSL.
 > [!important]  
 > En necesario que te encuentres en el directorio en el que has descargado el proyecto  
 
-#### Configuración de Apache
-
+#### Configuración de Archivos
 ```bash
 sudo mkdir /var/www/etiquetador
 sudo cp -r EtiquetadorOSL/content/* /var/www/etiquetador/
+sudo cp -r EtiquetadorOSL/includes/* /var/www/etiquetador/
+sudo cp EtiquetadorOSL/login.php EtiquetadorOSL/register.php EtiquetadorOSL/index.html /var/www/etiquetador/
+```
+##### Configuración de Apache
+```bash
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/etiquetador.conf
 sudo nano /etc/apache2/sites-available/etiquetador.conf
 ```
@@ -96,8 +100,6 @@ Dentro de este nuevo archivo de configuración debemos cambiar la linea `Documen
 
 #### Configuración de nginx(en caso de usarlo)
 ```bash
-sudo mkdir /var/www/etiquetador
-sudo cp -r EtiquetadorOSL/content/* /var/www/etiquetador/
 sudo cp /etc/nginx/sites-available/default  /etc/nginx/sites-available/etiquetador
 sudo nano /etc/nginx/sites-available/etiquetador
 
