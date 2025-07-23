@@ -88,7 +88,7 @@ INSERT INTO disc (capacity) VALUES("1000");
 INSERT INTO sn (prefix,num) VALUES("OSL", 0);
 
 -- Tabla para gestión de roles
-CREATE TABLE IF NOT EXISTS roles ( --si no existe la tabla roles, la crea
+CREATE TABLE roles (
     rol_id INT NOT NULL AUTO_INCREMENT,
     nombre_rol VARCHAR(50) NOT NULL UNIQUE COMMENT 'Ej: admin, usuario',
     descripcion TEXT DEFAULT NULL,
@@ -98,15 +98,15 @@ CREATE TABLE IF NOT EXISTS roles ( --si no existe la tabla roles, la crea
 INSERT IGNORE INTO roles (nombre_rol, descripcion) VALUES ('admin', 'Administrador del sistema con acceso completo'); --id = 1
 INSERT IGNORE INTO roles (nombre_rol, descripcion) VALUES ('user', 'Usuario con acceso limitado'); --id = 2
 -- Tabla para gestión de usuarios
-CREATE TABLE IF NOT EXISTS users ( --si no existe la tabla users, la crea
+CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    rol_id INT NOT NULL, -- Añadido campo para referencia a roles
+    rol_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (rol_id) REFERENCES roles(rol_id) ON DELETE CASCADE ON UPDATE CASCADE, -- Referencia a la tabla roles
+    FOREIGN KEY (rol_id) REFERENCES roles(rol_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id, rol_id)
 );
-INSERT IGNORE INTO users (username, password, rol_id) VALUES ('admin', '$2y$10$eImiTMZG9b1a5Z3f8z5uUu7F4j1k5m6Q0J5Y6Z3f8z5uUu7F4j1k5m6Q0J5Y6Z3f8z5uUu7F4j1k5m6Q0J5Y6', 1);
 
+INSERT IGNORE INTO users (username, password, rol_id) VALUES ('admin', '$2y$10$HLE6Q/BaoIwGatfFkHktfe8wuI.yULULMPi/TKyGIAUWr6wKxiY1i', 1);
