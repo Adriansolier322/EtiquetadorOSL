@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Localhost Redirect</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Login - My Application</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,32 +17,19 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-    <!-- Main container -->
     <div class="min-h-screen flex flex-col items-center justify-center p-4">
         
-        <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Navigation Gateway</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">Please select a destination to be redirected.</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Welcome! Please Log In</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Access your account to continue to the application.</p>
         </div>
 
-        <!-- Navigation Links Container -->
-        <div class="w-full max-w-md space-y-4">
-            
-            <!-- Link 1: EtiquetadorOSL -->
-            <a href="/EtiquetadorOSL/login.php" 
-               class="group block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
-                <h2 class="text-xl font-semibold text-blue-600 dark:text-blue-400">EtiquetadorOSL</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">Navigate to the OSL Tagging application.</p>
+        <div class="w-full max-w-sm">
+            <a href="/login.php" 
+               class="group block p-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out text-center">
+                <h2 class="text-2xl font-bold">Log In</h2>
+                <p class="mt-2 text-blue-100">Click here to access your account</p>
             </a>
-            
-            <!-- Link 2: Admin Login -->
-            <a href="/Admin/login.php" 
-               class="group block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
-                <h2 class="text-xl font-semibold text-green-600 dark:text-green-400">Admin Panel</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">Navigate to the Administrator login page.</p>
-            </a>
-
         </div>
 
     </div>

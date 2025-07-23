@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                    $_SESSION['username'] = $user['username'];
                    $_SESSION['rol_id'] = $user['rol_id']; // Guardar el rol del usuario
                    // Redirigir al usuario
-                    header("Location: index.php");
+                    header("Location: EtiquetadorOSL/index.php");
                     exit;
                 }
                 else{
