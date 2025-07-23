@@ -51,14 +51,14 @@ Comprobamos que esté corriendo:
 ```bash
 sudo systemctl status php8.3-fpm.service
 ```
----
+
 
 #### Paso 3: Instalar MySQL o MariaDB
 
 ```bash
 sudo apt install mariadb-server -y
 ```
----
+
 
 #### Paso 4: Instalar PHP
 
