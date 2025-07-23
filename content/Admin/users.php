@@ -1,14 +1,16 @@
 <?php 
-// Incluir archivos necesarios
 require 'includes/auth.php';
 require 'includes/config.php';
 
-// Verificar autenticación
 checkAuth();
 
 // Obtener todos los usuarios
 $usersQuery = $pdo->query("SELECT * FROM users ORDER BY username");
 $users = $usersQuery->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener todos los roles
+$rolesQuery = $pdo->query("SELECT rol_id, nombre_rol FROM roles");
+$roles = $rolesQuery->fetchAll(PDO::FETCH_ASSOC);
 
 // Variables para mensajes
 $successMessage = '';
@@ -89,32 +91,28 @@ if (isset($_GET['delete'])) {
 </head>
 <body>
     <?php include 'includes/sidebar.php'; ?>
-    
     <div class="main-content">
         <h1>Gestión de Usuarios</h1>
-        
         <?php if (!empty($successMessage)): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($successMessage); ?></div>
         <?php endif; ?>
-        
         <?php if (!empty($errorMessage)): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($errorMessage); ?></div>
         <?php endif; ?>
-        
+
         <div class="card">
             <h2>Añadir Nuevo Usuario</h2>
             <form method="post">
                 <div class="form-group">
                     <label for="username">Usuario:</label>
                     <input type="text" id="username" name="username" required>
-                    
                     <label for="password">Contraseña:</label>
                     <input type="password" id="password" name="password" required>
                 </div>
                 <button type="submit" name="add" class="btn">Añadir Usuario</button>
             </form>
         </div>
-        
+
         <div class="card">
             <h2>Lista de Usuarios</h2>
             <table>
@@ -122,6 +120,7 @@ if (isset($_GET['delete'])) {
                     <tr>
                         <th>ID</th>
                         <th>Usuario</th>
+                        <th>Rol</th>
                         <th>Creado el</th>
                         <th>Actualizado el</th>
                         <th>Acciones</th>
@@ -132,23 +131,36 @@ if (isset($_GET['delete'])) {
                     <tr>
                         <td><?php echo (int)$user['id']; ?></td>
                         <td><?php echo htmlspecialchars($user['username']); ?></td>
+                        <td>
+                            <?php
+                                foreach ($roles as $role) {
+                                    if ($role['rol_id'] == $user['rol_id']) {
+                                        echo htmlspecialchars($role['nombre_rol']);
+                                        break;
+                                    }
+                                }
+                            ?>
+                        </td>
                         <td><?php echo htmlspecialchars($user['created_at']); ?></td>
                         <td><?php echo htmlspecialchars($user['updated_at']); ?></td>
                         <td class="actions">
                             <a class="btn-edit" onclick="openEditModal(<?php echo (int)$user['id']; ?>, '<?php echo htmlspecialchars($user['username']); ?>')">
                                 Cambiar Contraseña
                             </a>
+                            <a class="btn-edit-rol" onclick="openRoleModal(<?php echo (int)$user['id']; ?>, '<?php echo htmlspecialchars($user['username']); ?>', <?php echo (int)$user['rol_id']; ?>)">
+                                Cambiar Rol
+                            </a>
                             <a href="users.php?delete=<?php echo (int)$user['id']; ?>" class="btn-delete" 
                                onclick="return confirm('¿Está seguro que desea eliminar este usuario?')">
                                 Eliminar
                             </a>
                         </td>
-                    </tr>
+                    </tr> 
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        
+
         <!-- Modal para cambiar contraseña -->
         <div id="editModal" class="modal">
             <div class="modal-content">
@@ -159,7 +171,6 @@ if (isset($_GET['delete'])) {
                     <div class="form-group">
                         <label for="edit_username">Usuario:</label>
                         <input type="text" id="edit_username" readonly>
-                        
                         <label for="new_password">Nueva Contraseña:</label>
                         <input type="password" id="new_password" name="password" required>
                     </div>
@@ -167,26 +178,60 @@ if (isset($_GET['delete'])) {
                 </form>
             </div>
         </div>
+
+        <!-- Modal para cambiar rol -->
+        <div id="roleModal" class="modal">
+            <div class="modal-content">
+                <span class="close-role">&times;</span>
+                <h2>Cambiar Rol</h2>
+                <form method="post">
+                    <input type="hidden" id="role_user_id" name="userId">
+                    <div class="form-group">
+                        <label for="role_username">Usuario:</label>
+                        <input type="text" id="role_username" readonly>
+                        <label for="role_select">Nuevo Rol:</label>
+                        <select id="role_select" name="role" required>
+                            <?php foreach ($roles as $role): ?>
+                                <option value="<?php echo $role['rol_id']; ?>"><?php echo htmlspecialchars($role['nombre_rol']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <button type="submit" name="edit_role" class="btn">Actualizar Rol</button>
+                </form>
+            </div>
+        </div>
     </div>
-    
+
     <script src="assets/js/script.js"></script>
     <script>
-    // Función para abrir el modal de edición
+    // Modal contraseña
     function openEditModal(userId, username) {
         document.getElementById('edit_user_id').value = userId;
         document.getElementById('edit_username').value = username;
         document.getElementById('editModal').style.display = 'block';
     }
-    
-    // Cerrar modal al hacer clic en la X
     document.querySelector('.modal .close').addEventListener('click', function() {
         document.getElementById('editModal').style.display = 'none';
     });
-    
-    // Cerrar modal al hacer clic fuera
     window.addEventListener('click', function(event) {
         if (event.target == document.getElementById('editModal')) {
             document.getElementById('editModal').style.display = 'none';
+        }
+    });
+
+    // Modal rol
+    function openRoleModal(userId, username, rolId) {
+        document.getElementById('role_user_id').value = userId;
+        document.getElementById('role_username').value = username;
+        document.getElementById('role_select').value = rolId;
+        document.getElementById('roleModal').style.display = 'block';
+    }
+    document.querySelector('.modal .close-role').addEventListener('click', function() {
+        document.getElementById('roleModal').style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('roleModal')) {
+            document.getElementById('roleModal').style.display = 'none';
         }
     });
     </script>
