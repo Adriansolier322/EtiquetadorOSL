@@ -162,4 +162,5 @@ systemctl restart apache2
 ```
 Con esto ya estaria todo listo.
 > [!important]  
-> En necesario que te encuentres en el directorio en el que has descargado el proyecto  
+> Inicialmente tiene un usuario que tiene acceso a todo, usuario = admin, contraseña = admin123.
+> Es importante que una vez que se instale y se acceda a todo, el admin debe de cambiar la contraseña.  
