@@ -149,9 +149,9 @@ Dentro de la consola de MySQL o MariaDB ejecutaremos
 ```sql
 CREATE DATABASE etiquetador;
 CREATE USER 'etiquetador'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON nombre_DB.* TO 'etiquetador'@'localhost';
+GRANT ALL PRIVILEGES ON etiquetador.* TO 'etiquetador'@'localhost';
 FLUSH etiquetador;
-USE nombre_DB;
+USE etiquetador;
 SOURCE /var/www/etiquetador/scripts/template.sql;
 EXIT;
 ```
@@ -163,3 +163,6 @@ a2ensite etiquetador.conf
 systemctl restart apache2
 ```
 Con esto ya estaria todo listo.
+> [!Importante]  
+> Inicialmente tiene un usuario que tiene acceso a todo, usuario = admin, contraseña = admin123.
+> Es importante que una vez que se instale y se acceda a todo, el admin debe de cambiar la contraseña.  
