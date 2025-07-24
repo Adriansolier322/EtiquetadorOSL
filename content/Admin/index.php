@@ -1,6 +1,11 @@
 <?php 
 include 'includes/auth.php';
 checkAuth();
+
+if(!isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 1) {
+    echo "<script>alert('Solo los administradores tienen acceso aquí.'); window.location.href = '../EtiquetadorOSL/index.php';</script>";
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
