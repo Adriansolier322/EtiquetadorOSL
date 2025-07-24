@@ -6,50 +6,50 @@ session_start();
 
 $errorMessage = '';
 $successMessage = '';
-$username = ''; // Initialize to prevent "Undefined variable" on form value
+$username = ''; // Inicializamos para prevenir "Undefined variable" en el valor del formulario
 
-// Process the form only when it's submitted via POST
+// Procesar el formulario cuando se envía a través de POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize and trim user inputs
-    $username = trim($_POST['username'] ?? ''); // Use null coalescing operator for safety
+    // Sanitizar y recortar entradas de usuario
+    $username = trim($_POST['username'] ?? ''); // Usa null coalescing operator para mayor seguridad
     $password = trim($_POST['password'] ?? '');
     $confirm_password = trim($_POST['confirm_password'] ?? '');
 
-    // Basic Validations
+    // Validaciones básicas
     if (empty($username) || empty($password) || empty($confirm_password)) {
         $errorMessage = 'Todos los campos son obligatorios. Por favor, completa todos los campos.';
     } elseif ($password !== $confirm_password) {
         $errorMessage = 'Las contraseñas no coinciden.';
-    } elseif (strlen($username) < 3 || strlen($username) > 50) { // Example length validation
+    } elseif (strlen($username) < 3 || strlen($username) > 50) { 
         $errorMessage = 'El nombre de usuario debe tener entre 3 y 50 caracteres.';
-    } elseif (strlen($password) < 8) { // Example password strength validation
+    } elseif (strlen($password) < 8) {
         $errorMessage = 'La contraseña debe tener al menos 8 caracteres.';
     } else {
         try {
-            // --- STEP 1: Check if the username already exists ---
+            // --- Paso 1: Mirar si el usuario ya existe ---
             $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
             $checkStmt->execute([$username]);
-            $userExists = $checkStmt->fetchColumn(); // Gets the count
+            $userExists = $checkStmt->fetchColumn(); //Obtiene el conteo
 
             if ($userExists > 0) {
-                // If username already exists, set error message
+                // Si el usuario existe, establecer mensaje de error
                 $errorMessage = 'El nombre de usuario ya está en uso. Por favor, elige otro.';
             } else {
-                // --- STEP 2: If username is available, hash the password and insert the new user ---
-                $passwordHash = password_hash($password, PASSWORD_DEFAULT); // <--- HASH THE PASSWORD HERE!
+                // --- Paso 2: Si el nombre de usuario está disponible, hashear la contraseña e insertar el nuevo usuario ---
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT); // <--- SE HASHEA LA CONTRASEÑA AQUÍ
 
-                // Insert the new user into the database
-                // Assuming 'rol_id' has a default in DB or you always set it to 2 for new registrations
+                // Insertamos el nuevo usuario en la base de datos
+                // Suponiendo que 'rol_id' tiene un valor predeterminado en la base de datos o siempre se establece en 2 para nuevos registros
                 $insertStmt = $pdo->prepare("INSERT INTO users(username, password, rol_id) VALUES(?, ?, ?)");
-                $insertStmt->execute([$username, $passwordHash, 2]); // Using 2 as default rol_id
+                $insertStmt->execute([$username, $passwordHash, 2]); // Usando 2 como rol_id predeterminado(usuario)
 
-                // Redirect to the login page with a success flag
+                // Redirigir a la página de inicio de sesión con una bandera de éxito
                 $_SESSION['registration_success'] = '¡Registro exitoso! Ahora puedes iniciar sesión.';
                 header('Location: login.php');
-                exit(); // Always exit after a header redirect
+                exit(); // Siempre salir después de una redirección
             }
         } catch (PDOException $e) {
-            // Log the error for debugging purposes (e.g., to a file)
+            // Guardar el error para propósitos de depuración (por ejemplo, en un archivo)
             error_log("Registration PDO Error: " . $e->getMessage());
             $errorMessage = 'Error al registrar el usuario. Por favor, inténtalo de nuevo más tarde.';
         }

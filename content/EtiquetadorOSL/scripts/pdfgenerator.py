@@ -10,17 +10,28 @@ import qrcode
 class PdfCreator:
     def __init__(self):
         """
-        Constructor que se encarga de limpiar archivos previos y 
+        Constructor que se encarga de limpiar archivos previos y
         procesar los argumentos pasados al script.
         """
-        
+
         self.parse_arguments()
+        # Ensure the necessary directories exist before cleanup or file operations
+        self.ensure_directories_exist() # <-- Add this line
         if self.clean == "true":
             self.cleanup(False)
 
+    def ensure_directories_exist(self):
+        """
+        Ensures that the required output directories exist.
+        """
+        os.makedirs("pdf/raid", exist_ok=True)
+        os.makedirs("pdf/qrcodes", exist_ok=True)
+        os.makedirs("pdf/finalraid", exist_ok=True)
+
+
     def cleanup(self, remove_also_generado: bool):
         """
-        Elimina el archivo 'pdf/generado.pdf' y elimina recursivamente la carpeta 'pdf/raid' 
+        Elimina el archivo 'pdf/generado.pdf' y elimina recursivamente la carpeta 'pdf/raid'
         en caso de que existan, ignorando errores si no se encuentran.
         """
         if remove_also_generado:
@@ -28,55 +39,76 @@ class PdfCreator:
                 os.remove("pdf/generado.pdf")
             except Exception:
                 pass
-        
-        try:
-            for name in os.listdir("pdf/raid"):
-                full_path = os.path.join("pdf/raid", name)
-                if os.path.isfile(full_path) or os.path.islink(full_path):
-                    os.unlink(full_path)  # Elimina archivos y enlaces simbólicos
-                elif os.path.isdir(full_path):
-                    shutil.rmtree(full_path)  # Elimina subcarpetas
-        except Exception:
-            pass
-        
-        try:
-            for name in os.listdir("pdf/qrcodes"):
-                full_path = os.path.join("pdf/qrcodes", name)
-                if os.path.isfile(full_path) or os.path.islink(full_path):
-                    os.unlink(full_path)  # Elimina archivos y enlaces simbólicos
-                elif os.path.isdir(full_path):
-                    shutil.rmtree(full_path)  # Elimina subcarpetas
-        except Exception:
-            pass
 
-        try: 
-            for name in os.listdir("pdf/finalraid"):
-                full_path = os.path.join("pdf/finalraid", name)
-                if os.path.isfile(full_path) or os.path.islink(full_path):
-                    os.unlink(full_path)  # Elimina archivos y enlaces simbólicos
-                elif os.path.isdir(full_path):
-                    shutil.rmtree(full_path)  # Elimina subcarpetas
-        except Exception:
-            pass
+        # Use os.path.exists and shutil.rmtree for robustness
+        if os.path.exists("pdf/raid"):
+            try:
+                # Iterate and remove contents first to handle cases where rmtree fails due to permissions etc.
+                for name in os.listdir("pdf/raid"):
+                    full_path = os.path.join("pdf/raid", name)
+                    if os.path.isfile(full_path) or os.path.islink(full_path):
+                        os.unlink(full_path)
+                    elif os.path.isdir(full_path):
+                        shutil.rmtree(full_path)
+            except Exception as e:
+                print(f"Warning: Could not clear pdf/raid contents: {e}") # Optional: log error
+            try:
+                shutil.rmtree("pdf/raid") # Then remove the directory itself
+            except Exception as e:
+                print(f"Warning: Could not remove pdf/raid directory: {e}")
+
+        if os.path.exists("pdf/qrcodes"):
+            try:
+                for name in os.listdir("pdf/qrcodes"):
+                    full_path = os.path.join("pdf/qrcodes", name)
+                    if os.path.isfile(full_path) or os.path.islink(full_path):
+                        os.unlink(full_path)
+                    elif os.path.isdir(full_path):
+                        shutil.rmtree(full_path)
+            except Exception as e:
+                print(f"Warning: Could not clear pdf/qrcodes contents: {e}")
+            try:
+                shutil.rmtree("pdf/qrcodes")
+            except Exception as e:
+                print(f"Warning: Could not remove pdf/qrcodes directory: {e}")
+
+        if os.path.exists("pdf/finalraid"):
+            try:
+                for name in os.listdir("pdf/finalraid"):
+                    full_path = os.path.join("pdf/finalraid", name)
+                    if os.path.isfile(full_path) or os.path.islink(full_path):
+                        os.unlink(full_path)
+                    elif os.path.isdir(full_path):
+                        shutil.rmtree(full_path)
+            except Exception as e:
+                print(f"Warning: Could not clear pdf/finalraid contents: {e}")
+            try:
+                shutil.rmtree("pdf/finalraid")
+            except Exception as e:
+                print(f"Warning: Could not remove pdf/finalraid directory: {e}")
+
+        # Re-create directories after cleanup if they were removed
+        self.ensure_directories_exist() # <-- Add this line here too, to ensure they are there after cleanup
+
 
     @staticmethod
     def padding_num(num) -> str:
         """
         Recibe un número y retorna una cadena con el número formateado a 4 dígitos.
-        
+
         Ejemplo:
             padding_num(5)  --> "0005"
             padding_num(123) --> "0123"
         """
         return str(num).zfill(4)
-    
+
     @staticmethod
     def extract_num(name):
         return int(re.search(r'\d+', name).group())
-    
+
     def parse_arguments(self):
         """
-        Procesa los argumentos recibidos en sys.argv y asigna los valores 
+        Procesa los argumentos recibidos en sys.argv y asigna los valores
         a los atributos correspondientes de la clase.
         """
         # Los argumentos se esperan en el siguiente orden:
@@ -123,7 +155,7 @@ class PdfCreator:
         self.name = sys.argv[13]
         self.qrcode_name = sys.argv[14]
         self.end = sys.argv[15]
-        self.is_single = sys.argv[16]
+        self.is_single = sys.argv[16] 
         self.clean = sys.argv[17]
         self.pc_url = sys.argv[18]
         try:
@@ -133,7 +165,7 @@ class PdfCreator:
 
     def debug_info(self):
         """
-        Imprime información de depuración basada en los argumentos procesados 
+        Imprime información de depuración basada en los argumentos procesados
         y finaliza la ejecución del programa.
         """
 
@@ -179,7 +211,7 @@ class PdfCreator:
             'ram_type': self.ram_type.upper(),              # Tipo de RAM (1: DDR4, 2: DDR3, etc.)
             'ram_capacity': self.ram_capacity,              # Capacidad de la RAM en GB
             'disc_type': self.disc_type,                    # Tipo de disco (1: HDD, 2: SSD, 3: NVMe)
-            'disc_capacity': self.disc_capacity,            # Capacidad del disco en GB 
+            'disc_capacity': self.disc_capacity,            # Capacidad del disco en GB
             'gpu_type': self.gpu_type,                      # Tipo de GPU (1: integrada, 2: externa)
             'gpu_name': self.gpu_name.upper(),              # Nombre de la GPU
             'wifi_bool': self.wifi,                         # 1 si tiene WiFi, 2 si no
@@ -189,14 +221,15 @@ class PdfCreator:
         # Se crea el PDF utilizando la plantilla "pdf/plantilla.pdf"
         # El archivo generado tendrá como nombre la variable name
         fillpdfs.write_fillable_pdf(input_pdf_path="pdf/plantilla.pdf", output_pdf_path=f"{self.name}", data_dict=data, flatten=True)
-        
-        qrcode = self.create_qrcode()
-        qrcode.save(self.qrcode_name)
-        
+
+        # The qrcode_name also needs its parent directory to exist
+        qrcode_img = self.create_qrcode()
+        qrcode_img.save(self.qrcode_name)
+
         if self.end == "true":
             self.merge_pdfs()
 
-            
+
 
     def merge_pdfs(self):
         qrcode_folder = "pdf/qrcodes"
@@ -226,9 +259,13 @@ class PdfCreator:
             rect = pymupdf.Rect(16, 221, 53, 258)
             page.insert_image(rect, filename=full_path_qrcode)
 
-            pdf.save(f"pdf/finalraid/generado{index+1}.pdf")
-        pdf.close()
+            # Ensure the output directory for finalraid exists before saving
+            # This is already handled by ensure_directories_exist, but good to keep in mind
+            final_raid_output_path = f"pdf/finalraid/generado{index+1}.pdf"
+            pdf.save(final_raid_output_path)
+            pdf.close() # Close the individual PDF after saving it to finalraid
 
+        # The PyMuPDF merge operation opens a new blank PDF
         merger = pymupdf.open()
         pdf_files = [f for f in os.listdir("pdf/finalraid") if f.endswith('.pdf')]
         pdf_files = sorted(pdf_files, key=self.extract_num)
@@ -240,7 +277,6 @@ class PdfCreator:
         merger.save(output_path)
         merger.close()
 
-        
 
 if __name__ == "__main__":
     pdf_creator = PdfCreator()
