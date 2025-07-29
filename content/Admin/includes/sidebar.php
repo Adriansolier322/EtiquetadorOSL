@@ -11,6 +11,7 @@
         <hr>
         <li><a href="users.php">Gestionar usuarios</a></li>
         <li><a href="../EtiquetadorOSL">Volver al etiquetador</a></li>
+        <li><a class="footer-btn" id="theme-toggle">Cambiar Tema</a></li>
         <li><a href="logout.php">Cerrar Sesión</a></li>
     </ul>
     <script>
@@ -43,6 +44,31 @@
                     link.parentElement.classList.add('active');
                 }
             });
+           // Theme Toggle Logic
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            
+            // Apply theme on load
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme) {
+                body.classList.add(currentTheme);
+            }
+
+            // Add click listener
+            // It's good practice to check if the element exists before adding an event listener
+            if (themeToggle) { 
+                themeToggle.addEventListener('click', () => {
+                    if (body.classList.contains('dark-theme')) {
+                        body.classList.remove('dark-theme');
+                        localStorage.setItem('theme', ''); // Store empty string for light theme
+                    } else {
+                        body.classList.add('dark-theme');
+                        localStorage.setItem('theme', 'dark-theme');
+                    }
+                });
+            } else {
+                console.warn("Theme toggle button with ID 'theme-toggle' not found!");
+            }
         });
     </script>
 </div>

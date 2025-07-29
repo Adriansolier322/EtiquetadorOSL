@@ -9,9 +9,16 @@
 body {
     background-color: #f5f5f5;
     color: #333;
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s; /* Added for smooth transition */
 }
 
-/* Sidebar mejorado */
+/* Dark Mode Styles */
+body.dark {
+    background-color: #222; /* Darker background */
+    color: #eee; /* Lighter text color */
+}
+
 .sidebar {
     width: 250px;
     background: #2c3e50;
@@ -20,6 +27,14 @@ body {
     position: fixed;
     padding: 20px 0;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    z-index: 100;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s; /* Added for smooth transition */
+}
+
+body.dark .sidebar {
+    background: #1a1a1a; /* Even darker sidebar for contrast */
+    box-shadow: 2px 0 15px rgba(0,0,0,0.4); /* Stronger shadow in dark mode */
 }
 
 .sidebar h2 {
@@ -28,6 +43,13 @@ body {
     padding: 0 20px;
     font-size: 1.3rem;
     color: #ecf0f1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s; /* Added for smooth transition */
+}
+
+body.dark .sidebar h2 {
+    color: #f0f0f0; /* Slightly lighter heading */
 }
 
 .sidebar ul {
@@ -45,16 +67,30 @@ body {
     background: #34495e;
 }
 
+body.dark .sidebar li:hover {
+    background: #333; /* Darker hover for dark mode */
+}
+
 .sidebar li.active {
     background: #34495e;
     border-left: 4px solid #3498db;
-    margin-left: -4px; /* Compensa el borde izquierdo */
+    margin-left: -4px;
+}
+
+body.dark .sidebar li.active {
+    background: #333; /* Consistent active background */
+    border-left-color: #007bff; /* Brighter active border for dark mode */
 }
 
 .sidebar li.active a {
     font-weight: 600;
     color: #fff;
 }
+
+body.dark .sidebar li.active a {
+    color: #fff; /* Keep white for active link */
+}
+
 
 .sidebar a {
     color: #ecf0f1;
@@ -65,27 +101,46 @@ body {
     border-radius: 0 4px 4px 0;
 }
 
+body.dark .sidebar a {
+    color: #ccc; /* Slightly darker link color */
+}
+
 .sidebar hr {
     border: none;
     height: 1px;
     background-color: #34495e;
     margin: 15px 20px;
+    transition: background-color 0.3s; /* Added for smooth transition */
 }
 
-/* Main content */
+body.dark .sidebar hr {
+    background-color: #444; /* Lighter separator */
+}
+
 .main-content {
     margin-left: 250px;
     padding: 25px;
     min-height: 100vh;
+    background-color: #f5f5f5;
+    transition: background-color 0.3s; /* Added for smooth transition */
 }
 
-/* Cards */
+body.dark .main-content {
+    background-color: #222; /* Consistent dark background */
+}
+
 .card {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 15px rgba(0,0,0,0.08);
     padding: 25px;
     margin-bottom: 25px;
+    transition: background 0.3s, box-shadow 0.3s; /* Added for smooth transition */
+}
+
+body.dark .card {
+    background: #333; /* Darker card background */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Stronger shadow in dark mode */
 }
 
 .card h2 {
@@ -94,9 +149,14 @@ body {
     font-size: 1.4rem;
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
+    transition: color 0.3s, border-bottom-color 0.3s; /* Added for smooth transition */
 }
 
-/* Forms */
+body.dark .card h2 {
+    color: #eee; /* Lighter heading color */
+    border-bottom-color: #444; /* Darker border */
+}
+
 .form-group {
     margin-bottom: 18px;
 }
@@ -106,27 +166,99 @@ body {
     margin-bottom: 8px;
     font-weight: 600;
     color: #2c3e50;
+    transition: color 0.3s; /* Added for smooth transition */
 }
 
-.form-group input, 
-.form-group select, 
+body.dark .form-group label {
+    color: #ccc; /* Lighter label color */
+}
+
+.form-group input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
-    transition: border 0.3s;
+    transition: border 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s; /* Added for smooth transition */
 }
 
-.form-group input:focus, 
-.form-group select:focus, 
+body.dark .form-group input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+body.dark .form-group select,
+body.dark .form-group textarea {
+    background-color: #444; /* Darker input background */
+    color: #eee; /* Lighter input text */
+    border-color: #555; /* Darker border */
+}
+
+.form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
     border-color: #3498db;
     outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
-/* Buttons */
+body.dark .form-group input:focus,
+body.dark .form-group select:focus,
+body.dark .form-group textarea:focus {
+    border-color: #007bff; /* Brighter focus border */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4); /* Stronger focus shadow */
+}
+
+.form-group.radio-group-container,
+.form-group.checkbox-group-container {
+    margin-bottom: 18px;
+}
+
+.form-group.radio-group-container > label,
+.form-group.checkbox-group-container > label {
+    margin-bottom: 10px;
+}
+
+.radio-group,
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-option,
+.checkbox-option {
+    display: flex;
+    align-items: center;
+}
+
+.radio-option input[type="radio"],
+.checkbox-option input[type="checkbox"] {
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+body.dark .radio-option input[type="radio"],
+body.dark .checkbox-option input[type="checkbox"] {
+    /* You might need custom styling for radio/checkbox appearance in dark mode
+       as default browser styles can be tricky to override directly.
+       For now, they will inherit some background/color from the body. */
+    filter: invert(0.9) hue-rotate(180deg); /* Simple trick for some input types */
+}
+
+
+.radio-option label,
+.checkbox-option label {
+    margin-bottom: 0;
+    display: inline-block;
+    cursor: pointer;
+    line-height: 1.2;
+    transition: color 0.3s; /* Added for smooth transition */
+}
+
+body.dark .radio-option label,
+body.dark .checkbox-option label {
+    color: #ccc; /* Lighter label color */
+}
+
 .btn {
     background: #3498db;
     color: white;
@@ -137,11 +269,25 @@ body {
     transition: all 0.3s;
     font-weight: 600;
     font-size: 0.95rem;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+body.dark .btn {
+    background: #007bff; /* Brighter blue for dark mode */
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2); /* Subtle shadow */
 }
 
 .btn:hover {
     background: #2980b9;
     transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.dark .btn:hover {
+    background: #0056b3; /* Darker hover for dark mode */
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
 }
 
 .btn-edit {
@@ -152,10 +298,36 @@ body {
     text-decoration: none;
     margin-right: 8px;
     transition: all 0.2s;
+    display: inline-block;
 }
+
+body.dark .btn-edit {
+    background: #ffc107; /* Brighter yellow */
+    color: #333; /* Darker text for contrast */
+}
+
+.btn-edit-rol {
+    background: #79B473;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 8px;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+body.dark .btn-edit-rol {
+    background: #28a745; /* Brighter green */
+}
+
 
 .btn-edit:hover {
     background: #e67e22;
+}
+
+body.dark .btn-edit:hover {
+    background: #e0a800; /* Darker hover */
 }
 
 .btn-delete {
@@ -164,26 +336,49 @@ body {
     padding: 6px 12px;
     border-radius: 4px;
     text-decoration: none;
+    margin-right: 8px;
     transition: all 0.2s;
+    display: inline-block;
+}
+
+body.dark .btn-delete {
+    background: #dc3545; /* Brighter red */
 }
 
 .btn-delete:hover {
     background: #c0392b;
 }
 
-/* Tables */
+body.dark .btn-delete:hover {
+    background: #c82333; /* Darker hover */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s; /* Added for smooth transition */
+}
+
+body.dark table {
+    background-color: #333; /* Darker table background */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3); /* Stronger shadow */
 }
 
 table th, table td {
     padding: 14px 16px;
     text-align: left;
     border-bottom: 1px solid #eee;
-    justify-content: space-between;
+    transition: border-bottom-color 0.3s, color 0.3s; /* Added for smooth transition */
+}
+
+body.dark table th, body.dark table td {
+    border-bottom-color: #444; /* Darker border */
+    color: #eee; /* Lighter text */
 }
 
 table th {
@@ -193,18 +388,32 @@ table th {
     text-transform: uppercase;
     font-size: 0.8rem;
     letter-spacing: 0.5px;
+    transition: background 0.3s, color 0.3s; /* Added for smooth transition */
+}
+
+body.dark table th {
+    background: #444; /* Darker header background */
+    color: #eee; /* Lighter header text */
 }
 
 table tr:hover {
     background-color: #f8f9fa;
 }
 
-/* Alerts */
+body.dark table tr:hover {
+    background-color: #4c4c4c; /* Darker hover background */
+}
+
 .alert {
     padding: 15px 20px;
     margin-bottom: 25px;
     border-radius: 4px;
     border-left: 4px solid transparent;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s, color 0.3s, border-color 0.3s; /* Added for smooth transition */
 }
 
 .alert-success {
@@ -213,18 +422,30 @@ table tr:hover {
     border-color: #28a745;
 }
 
+body.dark .alert-success {
+    background: #1e4d2b; /* Darker success background */
+    color: #d4edda; /* Lighter success text */
+    border-color: #28a745; /* Same border for consistency */
+}
+
 .alert-danger {
     background: #f8d7da;
     color: #721c24;
     border-color: #dc3545;
 }
 
-/* Stats */
+body.dark .alert-danger {
+    background: #5b2121; /* Darker danger background */
+    color: #f8d7da; /* Lighter danger text */
+    border-color: #dc3545; /* Same border for consistency */
+}
+
 .stats-container {
     display: flex;
     gap: 25px;
     margin-bottom: 30px;
     flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .stat-card {
@@ -234,27 +455,56 @@ table tr:hover {
     box-shadow: 0 2px 15px rgba(0,0,0,0.08);
     flex: 1;
     min-width: 200px;
+    max-width: calc(33.333% - 16.666px);
     text-align: center;
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s; /* Added for smooth transition */
+}
+
+body.dark .stat-card {
+    background: #333; /* Darker stat card background */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Stronger shadow */
+}
+
+@media (min-width: 992px) {
+    .stats-container .stat-card:nth-child(3n+1) {
+        margin-left: 0;
+    }
 }
 
 .stat-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+body.dark .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4); /* Even stronger hover shadow */
 }
 
 .stat-card h3 {
     color: #7f8c8d;
     margin-bottom: 15px;
     font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s; /* Added for smooth transition */
+}
+
+body.dark .stat-card h3 {
+    color: #bbb; /* Lighter heading */
 }
 
 .stat-card p {
-    font-size: 28px;
+    font-size: 2.2rem;
     font-weight: 700;
     color: #2c3e50;
+    transition: color 0.3s; /* Added for smooth transition */
 }
 
-/* Modal */
+body.dark .stat-card p {
+    color: #eee; /* Lighter number color */
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -279,54 +529,127 @@ table tr:hover {
     animation: modalFadeIn 0.3s;
 }
 
-@keyframes modalFadeIn {
-    from {opacity: 0; transform: translateY(-20px);}
-    to {opacity: 1; transform: translateY(0);}
+body.dark .modal {
+    background-color: rgba(0,0,0,0.8); /* Darker overlay in dark mode */
 }
 
-.close {
+body.dark .modal-content {
+    background-color: #333; /* Darker modal background */
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4); /* Stronger shadow */
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.close-button {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     transition: color 0.2s;
+    position: absolute;
+    top: 10px;
+    right: 15px;
 }
 
-.close:hover {
+body.dark .close-button {
+    color: #bbb; /* Lighter close button */
+}
+
+.close-button:hover,
+.close-button:focus {
     color: #333;
+    text-decoration: none;
 }
 
-/* Login */
-.login-container {
-    max-width: 400px;
-    margin: 100px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    text-align: center;
+body.dark .close-button:hover,
+body.dark .close-button:focus {
+    color: #eee; /* Even lighter on hover */
 }
 
-.login-container h1 {
-    margin-bottom: 25px;
-    color: #2c3e50;
-    font-size: 1.8rem;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
         height: auto;
         position: relative;
+        padding: 15px 0;
     }
-    
+
+    .sidebar h2 {
+        margin-bottom: 15px;
+    }
+
+    .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0 5px;
+    }
+
+    .sidebar li {
+        margin: 0 5px 5px 5px;
+    }
+
+    .sidebar a {
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    .sidebar hr {
+        display: none;
+    }
+
     .main-content {
         margin-left: 0;
+        padding: 15px;
     }
-    
+
     .stats-container {
         flex-direction: column;
+        gap: 15px;
+    }
+
+    .stat-card {
+        max-width: 100%;
+    }
+
+    .modal-content {
+        margin: 5% auto;
+    }
+
+    table th, table td {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 15px;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
     }
 }
