@@ -103,6 +103,7 @@ if (isset($_SESSION['registration_success']) && $_SESSION['registration_success'
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css">            
+    <link rel="icon" type="image/jpg" href="assets/favicon.ico"/>
 </head>
 <body>
     <div class="main-container">
