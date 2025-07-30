@@ -4,7 +4,6 @@ import shutil
 import re
 import pymupdf
 from fillpdf import fillpdfs
-import qrcode
 
 
 class PdfCreator:
@@ -28,7 +27,6 @@ class PdfCreator:
                 os.remove("pdf/generado.pdf")
             except Exception:
                 pass
-        
         try:
             for name in os.listdir("pdf/raid"):
                 full_path = os.path.join("pdf/raid", name)
@@ -36,26 +34,7 @@ class PdfCreator:
                     os.unlink(full_path)  # Elimina archivos y enlaces simbólicos
                 elif os.path.isdir(full_path):
                     shutil.rmtree(full_path)  # Elimina subcarpetas
-        except Exception:
-            pass
-        
-        try:
-            for name in os.listdir("pdf/qrcodes"):
-                full_path = os.path.join("pdf/qrcodes", name)
-                if os.path.isfile(full_path) or os.path.islink(full_path):
-                    os.unlink(full_path)  # Elimina archivos y enlaces simbólicos
-                elif os.path.isdir(full_path):
-                    shutil.rmtree(full_path)  # Elimina subcarpetas
-        except Exception:
-            pass
 
-        try: 
-            for name in os.listdir("pdf/finalraid"):
-                full_path = os.path.join("pdf/finalraid", name)
-                if os.path.isfile(full_path) or os.path.islink(full_path):
-                    os.unlink(full_path)  # Elimina archivos y enlaces simbólicos
-                elif os.path.isdir(full_path):
-                    shutil.rmtree(full_path)  # Elimina subcarpetas
         except Exception:
             pass
 
@@ -121,13 +100,12 @@ class PdfCreator:
         self.sn_num = str(sys.argv[12])
         self.sn = f"{self.sn_prefix}-{self.padding_num(self.sn_num)}"
         self.name = sys.argv[13]
-        self.qrcode_name = sys.argv[14]
-        self.end = sys.argv[15]
-        self.is_single = sys.argv[16]
-        self.clean = sys.argv[17]
-        self.pc_url = sys.argv[18]
+        self.end = sys.argv[14]
+        self.is_single = sys.argv[15]
+        self.clean = sys.argv[16]
+
         try:
-            self.observaciones = sys.argv[19]
+            self.observaciones = sys.argv[17]
         except IndexError:
             self.observaciones = ""
 
@@ -155,18 +133,6 @@ class PdfCreator:
         print("==================")
         sys.exit()
 
-    def create_qrcode(self):
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_H,
-            box_size=10,
-            border=0,
-        )
-        qr.add_data(self.pc_url)
-
-        img = qr.make_image(fit=False)
-        return img
-
     def create_pdf(self):
         """
         Crea el PDF utilizando la plantilla y un diccionario con los valores recopilados a partir de los argumentos.
@@ -189,58 +155,36 @@ class PdfCreator:
         # Se crea el PDF utilizando la plantilla "pdf/plantilla.pdf"
         # El archivo generado tendrá como nombre la variable name
         fillpdfs.write_fillable_pdf(input_pdf_path="pdf/plantilla.pdf", output_pdf_path=f"{self.name}", data_dict=data, flatten=True)
-        
-        qrcode = self.create_qrcode()
-        qrcode.save(self.qrcode_name)
-        
-        if self.end == "true":
+        if self.end == "true" and self.is_single == "false":
             self.merge_pdfs()
 
-            
 
     def merge_pdfs(self):
-        qrcode_folder = "pdf/qrcodes"
         raid_folder = "pdf/raid"
         output_path = "pdf/generado.pdf"
 
         pdf_files = [f for f in os.listdir(raid_folder) if f.endswith('.pdf')]
         pdf_files = sorted(pdf_files, key=self.extract_num)
 
-        qrcodes = [f for f in os.listdir(qrcode_folder) if f.endswith('.png')]
-        qrcodes = sorted(qrcodes, key=self.extract_num)
-
         if not pdf_files:
             print("No hay archivos PDF para combinar.")
             return
 
-
-
-        for index in range(len(pdf_files)):
-
-            full_path_pdf = os.path.join(raid_folder, pdf_files[index])
-            full_path_qrcode = os.path.join(qrcode_folder, qrcodes[index])
-
-            # Agregar el codigo QR
-            pdf = pymupdf.open(f"{full_path_pdf}")
-            page = pdf[0]
-            rect = pymupdf.Rect(16, 221, 53, 258)
-            page.insert_image(rect, filename=full_path_qrcode)
-
-            pdf.save(f"pdf/finalraid/generado{index+1}.pdf")
-        pdf.close()
-
         merger = pymupdf.open()
-        pdf_files = [f for f in os.listdir("pdf/finalraid") if f.endswith('.pdf')]
-        pdf_files = sorted(pdf_files, key=self.extract_num)
 
-        for pdf_file in pdf_files:
-            full_path_pdf = os.path.join("pdf/finalraid", pdf_file)
-            merger.insert_file(full_path_pdf)
+        try:
+            for pdf_file in pdf_files:
+                full_path = os.path.join(raid_folder, pdf_file)
+                merger.insert_file(full_path)
 
-        merger.save(output_path)
-        merger.close()
-
-        
+            merger.save(output_path)
+            merger.close()
+            print(f"PDF combinado creado en: {output_path}")
+            if len(pdf_files) > 20:
+                #self.cleanup(remove_also_generado=False)
+                pass
+        except Exception as e:
+            print(f"Error al combinar los PDFs: {e}")
 
 if __name__ == "__main__":
     pdf_creator = PdfCreator()

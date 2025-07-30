@@ -34,7 +34,6 @@
         <div class="form">
             <form action="generate_pdf.php" method="post">
 
-                <!-- Tipo de Placa -->
                 <div class="form-group">
                     <label for="board_type">Tipo de placa:</label>
                     <select name="board_type" id="board_type" required>
@@ -43,7 +42,6 @@
                     </select>
                 </div>
                 <hr>
-                <!-- Nombre CPU -->
                 <div class="form-group">
                     <label for="cpu_name">Nombre CPU:</label>
                     <div class="line">
@@ -62,7 +60,6 @@
                 </div>
                 <hr>
 
-                <!-- Memoria -->
                 <div class="form-group">
                     <label for="ram_capacity">Memoria:</label>
                     <div class="line">
@@ -87,7 +84,6 @@
                     </div>
                 </div>
                 <hr>
-                <!-- Disco duro -->
                 <div class="form-group">
                     <label for="disc_capacity">Disco duro:</label>
                     <div class="line">
@@ -112,7 +108,6 @@
                 </div>
                 <hr>
 
-                <!-- Grafica -->
                 <div class="form-group">
                     <label for="gpu_name">Gráfica:</label>
                     <div class="line">
@@ -135,7 +130,6 @@
                 </div>
                 <hr>
 
-                <!-- WiFi y Bluetooth -->
                 <div class="line">
                     <div class="radio-section">
                         <label>WiFi:</label>
@@ -166,7 +160,6 @@
                     </div>
                     <div class="vertical-line"></div>
 
-                    <!--Numero de serie-->
                     <div class="twodivinline">
                         <label for="SN">Número de serie:</label>
                         <div class="line">
@@ -182,7 +175,6 @@
                             <input type="text" placeholder="Prefijo (ej: ABC)" id="sn_prefix_other" name="sn_prefix_other" maxlength="3">
                         </div>
                         
-                        <!--Cantidad de etiquetas-->
                         <label for="num_pag" style="margin-top: 6px">Cantidad de etiquetas</label>
                         <div class="line">
                             <input type="number" placeholder="1" id="num_pag" name="num_pag" max="50" min="1" value="1" required>
@@ -191,14 +183,12 @@
                 </div>
                 <hr>
 
-                <!-- Observaciones -->
                 <div class="form-group">
                     <label for="observaciones">Observaciones:</label>
                     <textarea id="observaciones" name="observaciones" rows="4" cols="50" placeholder="NO poner más de 5 lineas" maxlength=120></textarea>
                 </div>
                 <hr>
                 
-                <!-- Guardado del model -->
                 <div class="form-group">
                     <label for="cbx">Deseas guardar el modelo:</label>
                     <div class="cntr line">
@@ -211,12 +201,14 @@
             </form>
         </div>
 
-        <!-- Preview -->
         <div class="preview">
             <?php
-            echo "<iframe id='iframe_preview'src='' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
+            $pdf_src = '';
+            if (isset($_GET['pdf_path'])) {
+                $pdf_src = htmlspecialchars($_GET['pdf_path']);
+            }
+            echo "<iframe id='iframe_preview' src='{$pdf_src}' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
             ?>
-
         </div>
 
         <footer class="footer">
@@ -225,7 +217,6 @@
            
             <div class="footer-buttons">
             <a href="https://github.com/Adriansolier322/EtiquetadorOSL" class="footer-btn" target="_blank">
-            <!-- Logo de GitHub -->
             <svg height="22" viewBox="0 0 16 16" width="22" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
             <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 
                 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52
@@ -269,10 +260,8 @@
 
             <button class="footer-btn" id="theme-toggle">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2">
-            <!-- Círculo central del sol -->
             <circle cx="32" cy="32" r="12" fill="currentColor" stroke="none"/>
 
-            <!-- Rayos del sol -->
             <line x1="32" y1="4" x2="32" y2="14"/>
             <line x1="32" y1="50" x2="32" y2="60"/>
             <line x1="4" y1="32" x2="14" y2="32"/>
