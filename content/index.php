@@ -100,14 +100,17 @@ if (isset($_SESSION['registration_success']) && $_SESSION['registration_success'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido al etiquetador OSL</title>
-    <link rel="stylesheet" href="assets/css/style.css"> </head>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css">            
+</head>
 <body>
     <div class="main-container">
         <div class="content-wrapper">
 
             <div class="welcome-section">
-                <h1 style="color: #2ef13; font-size: 2.8em; text-align: center;">¡Bienvenido!</h1>
-                <p style="color: #fff; font-size: 1.2em; text-align: center;">Accede a tu cuenta o regístrate para empezar.</p>
+                <h1>¡Bienvenido!</h1>
+                <p>Accede a tu cuenta o regístrate para empezar.</p>
             </div>
 
             <div id="login-section" class="login-container">

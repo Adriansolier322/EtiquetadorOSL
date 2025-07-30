@@ -80,8 +80,7 @@ body {
 
 /* Input Field Styles */
 .form-group input[type="text"],
-.form-group input[type="password"],
-.form-group input[type="email"] { /* Added email for register form */
+.form-group input[type="password"]{ /* Added email for register form */
     width: 100%; /* Simplified width */
     padding: 12px;
     border: 1px solid #ccc;
@@ -106,7 +105,7 @@ button[type="submit"] {
     width: 100%;
     padding: 14px;
     background-color: #1b304e;
-    color: #fff;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-size: 1.1em;
