@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
                 $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
                 $stmt->execute([$newpass,$userId]);
-                header("Location: logout.php");
+                header("Location: users.php");
                 exit;
 
             } catch (PDOException $e) {
