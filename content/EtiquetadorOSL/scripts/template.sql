@@ -88,12 +88,25 @@ INSERT INTO disc (capacity) VALUES("1000");
 INSERT INTO sn (prefix,num) VALUES("OSL", 0);
 
 
+CREATE TABLE roles(
+    id_rol INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre_rol VARCHAR(50) NOT NULL UNIQUE,
+    descripcion VARCHAR(255) NOT NULL
+);
+INSERT INTO roles (nombre_rol, descripcion) VALUES ('Admin', 'Acceso completo al sistema con todos los privilegios');
+INSERT INTO roles (nombre_rol, descripcion) VALUES ('User', 'Usuario con acceso limitado, puede ver y generar PDFs pero no modificar configuraciones');
 
 -- Tabla para gestión de usuarios
 CREATE TABLE users (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+  id INT NOT NULL AUTO_INCREMENT,
+  role_id INT NOT NULL,
   username VARCHAR(50) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id,role_id),
+  FOREIGN KEY (role_id) REFERENCES roles(id_rol),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+); 
+
+INSERT INTO users (role_id, username, password) VALUES (1, 'admin', '$2y$10$qdlwG5sR/A7OZ3tt5yYFgOvhKr09.eqoLRpAl2BQb17ymbhyeX84.'); -- Contraseña: admin123
