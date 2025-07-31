@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Theme Toggle Logic ---
+    // --- Theme Toggle Logic (keep if you have it) ---
     const themeToggle = document.getElementById('theme-toggle');
 
     // 1. Check user's previously saved preference
@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Inactivity Logout Logic ---
-    let inactivityTimer; // Use a more descriptive name
+    // --- Inactivity Logout Logic (keep if you have it) ---
+    let inactivityTimer;
 
     function resetInactivityTimer() {
         clearTimeout(inactivityTimer);
@@ -46,77 +46,52 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize the timer
     resetInactivityTimer();
 
-    // --- General Functions (can be placed outside DOMContentLoaded if they don't rely on DOM elements immediately) ---
+    // --- Select2 Initialization for Searchable Dropdowns ---
+    // IMPORTANT: Ensure jQuery and Select2 are loaded BEFORE this script executes.
+    // In edit_pc.php, these are loaded just before script.js.
+    const select2Selectors = ['#cpu_name', '#ram_capacity', '#disc_capacity', '#gpu_name'];
 
-    /**
-     * Validates a form for required fields and provides basic visual feedback.
-     * @param {string} formId The ID of the form to validate.
-     * @returns {boolean} True if the form is valid, false otherwise.
-     */
-    // This function is defined inside DOMContentLoaded, making it local to this scope.
-    // If you need to call it from an inline HTML event handler (like an `onclick` on a submit button),
-    // you might need to move it outside the DOMContentLoaded listener or make it globally accessible.
-    // For now, I'll keep it here as the prompt provided it as part of the main script.
-    window.validateForm = function(formId) { // Making it global for potential external calls
-        const form = document.getElementById(formId);
-        if (!form) {
-            console.error(`Form with ID '${formId}' not found.`);
-            return false;
-        }
-
-        const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-        let isValid = true;
-
-        inputs.forEach(input => {
-            const errorMessageId = `${input.id}-error`;
-            let errorMessageElement = document.getElementById(errorMessageId);
-
-            if (!input.value.trim()) {
-                input.classList.add('is-invalid'); // Add a class for invalid state
-                if (!errorMessageElement) {
-                    // Create and append an error message if it doesn't exist
-                    errorMessageElement = document.createElement('div');
-                    errorMessageElement.id = errorMessageId;
-                    errorMessageElement.classList.add('error-message'); // Add a class for styling
-                    errorMessageElement.textContent = 'Este campo es obligatorio.';
-                    input.parentNode.insertBefore(errorMessageElement, input.nextSibling);
+    select2Selectors.forEach(selector => {
+        const selectElement = $(selector); // Use jQuery to select the element
+        if (selectElement.length) { // Check if the element exists on the page
+            selectElement.select2({
+                tags: true, // Allow users to add new options by typing
+                placeholder: 'Seleccione o escriba un valor', // Placeholder text
+                allowClear: true, // Allow clearing the selection
+                width: '100%', // Make it take full width
+                // The 'createTag' function is crucial for handling custom inputs.
+                // It ensures that when a new value is typed, Select2 creates a new option
+                // with its value set to the typed text, and this value will be sent to the server.
+                createTag: function (params) {
+                    const term = $.trim(params.term);
+                    if (term === '') {
+                        return null;
+                    }
+                    return {
+                        id: term, // Use the typed text as the ID for a new tag
+                        text: term, // Use the typed text as the display text
+                        newTag: true // Add a flag to identify new tags if needed later
+                    };
+                },
+                // Customize how new tags are displayed in the results list
+                // (Optional, for better UX)
+                templateResult: function(data) {
+                    var $result = $('<span></span>');
+                    $result.text(data.text);
+                    if (data.newTag) {
+                        $result.append(' <em>(nuevo)</em>');
+                    }
+                    return $result;
+                },
+                // Customize how selected tags are displayed
+                // (Optional, for better UX)
+                templateSelection: function(data) {
+                    return data.text;
                 }
-                isValid = false;
-            } else {
-                input.classList.remove('is-invalid');
-                if (errorMessageElement) {
-                    errorMessageElement.remove(); // Remove error message if field is valid
-                }
-            }
-        });
-
-        return isValid;
-    };
-
-    // Initialize 'Other' input visibility on page load (from previous context)
-    // This part should be called within DOMContentLoaded as it relies on DOM elements.
-    function toggleOtherInput(selectId, otherContainerId) {
-        const selectElement = document.getElementById(selectId);
-        const otherContainer = document.getElementById(otherContainerId);
-        const otherInput = otherContainer.querySelector('input[type="text"]');
-
-        if (otherInput) {
-            if (selectElement.value === '_OTHER_') {
-                otherContainer.style.display = 'block';
-                otherInput.setAttribute('required', 'required');
-            } else {
-                otherContainer.style.display = 'none';
-                otherInput.removeAttribute('required');
-                otherInput.value = '';
-            }
+            });
         }
-    }
+    });
 
-    // Call toggleOtherInput for relevant fields on page load
-    toggleOtherInput('cpu_name', 'cpu_name_other_container');
-    toggleOtherInput('ram_capacity', 'ram_capacity_other_container');
-    toggleOtherInput('disc_capacity', 'disc_capacity_other_container');
-    toggleOtherInput('gpu_name', 'gpu_name_other_container');
-    // The other fields (board_type, ram_type, disc_type, gpu_type) no longer have 'Other' inputs
-    // so their respective toggleOtherInput calls are not strictly necessary but harmless if left.
+    // No explicit JS loop here for pre-filling is typically needed if PHP renders options correctly.
+    // Select2 will pick up the 'selected' attribute from the HTML options.
 });

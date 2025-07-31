@@ -111,14 +111,6 @@ sort($discTypesRaw);
 $discTypes = array_map(function($val) { return ['value' => $val]; }, $discTypesRaw);
 
 
-// For component tables, we need to preserve both ID and value for 'Other' handling
-// Add a special '_OTHER_' ID to indicate a new value will be entered
-$cpuNames = array_merge($dbCpuNames, [['id' => '_OTHER_', 'value' => 'Other']]);
-$ramCapacities = array_merge($dbRamCapacities, [['id' => '_OTHER_', 'value' => 'Other']]);
-$discCapacities = array_merge($dbDiscCapacities, [['id' => '_OTHER_', 'value' => 'Other']]);
-$gpuNames = array_merge($dbGpuNames, [['id' => '_OTHER_', 'value' => 'Other']]);
-
-
 // --- Handle Form Submission (POST Request) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
     $pcId = filter_input(INPUT_POST, 'pc_id', FILTER_SANITIZE_NUMBER_INT);
@@ -138,60 +130,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
     $obser = trim(filter_input(INPUT_POST, 'obser', FILTER_UNSAFE_RAW));
 
 
-    // Handle component IDs (CPU, RAM, Disc, GPU)
+    // Handle component IDs (CPU, RAM, Disc, GPU) - Now supporting Select2's tags
     try {
         // CPU Name
         $cpuNameId = null;
-        $submittedCpuName = $_POST['cpu_name'] ?? '';
-        if ($submittedCpuName === '_OTHER_') {
-            $newCpuName = trim(filter_input(INPUT_POST, 'cpu_name_other', FILTER_UNSAFE_RAW));
-            if (!empty($newCpuName)) {
-                $cpuNameId = getOrCreateComponentId($pdo, 'cpu', 'name', $newCpuName);
+        $submittedCpuValue = $_POST['cpu_name'] ?? ''; // This can be an ID or a new text from Select2
+        if (!empty($submittedCpuValue)) {
+            if (is_numeric($submittedCpuValue)) {
+                $cpuNameId = (int)$submittedCpuValue; // It's an existing ID
             } else {
-                $errorMessage = "El nombre del procesador 'Otro' no puede estar vacío.";
+                // It's a non-numeric string, meaning a new tag was entered
+                $newCpuName = trim(filter_input(INPUT_POST, 'cpu_name', FILTER_UNSAFE_RAW)); // Use submittedCpuValue directly
+                if (!empty($newCpuName)) {
+                    $cpuNameId = getOrCreateComponentId($pdo, 'cpu', 'name', $newCpuName);
+                } else {
+                    $errorMessage = "El nombre del procesador no puede estar vacío si se ingresa un valor nuevo.";
+                }
             }
-        } elseif (!empty($submittedCpuName)) {
-            $cpuNameId = (int)$submittedCpuName; // It's an existing ID
         }
 
         // RAM Capacity
         $ramCapacityId = null;
-        $submittedRamCapacity = $_POST['ram_capacity'] ?? '';
-        if ($submittedRamCapacity === '_OTHER_') {
-            $newRamCapacity = trim(filter_input(INPUT_POST, 'ram_capacity_other', FILTER_UNSAFE_RAW));
-            if (!empty($newRamCapacity)) {
-                $ramCapacityId = getOrCreateComponentId($pdo, 'ram', 'capacity', $newRamCapacity);
+        $submittedRamCapacityValue = $_POST['ram_capacity'] ?? '';
+        if (!empty($submittedRamCapacityValue)) {
+            if (is_numeric($submittedRamCapacityValue)) {
+                $ramCapacityId = (int)$submittedRamCapacityValue;
             } else {
-                $errorMessage = "La capacidad de RAM 'Otra' no puede estar vacía.";
+                $newRamCapacity = trim(filter_input(INPUT_POST, 'ram_capacity', FILTER_UNSAFE_RAW));
+                if (!empty($newRamCapacity)) {
+                    $ramCapacityId = getOrCreateComponentId($pdo, 'ram', 'capacity', $newRamCapacity);
+                } else {
+                    $errorMessage = "La capacidad de RAM no puede estar vacía si se ingresa un valor nuevo.";
+                }
             }
-        } elseif (!empty($submittedRamCapacity)) {
-            $ramCapacityId = (int)$submittedRamCapacity;
         }
 
         // Disc Capacity
         $discCapacityId = null;
-        $submittedDiscCapacity = $_POST['disc_capacity'] ?? '';
-        if ($submittedDiscCapacity === '_OTHER_') {
-            $newDiscCapacity = trim(filter_input(INPUT_POST, 'disc_capacity_other', FILTER_UNSAFE_RAW));
-            if (!empty($newDiscCapacity)) {
-                $discCapacityId = getOrCreateComponentId($pdo, 'disc', 'capacity', $newDiscCapacity);
+        $submittedDiscCapacityValue = $_POST['disc_capacity'] ?? '';
+        if (!empty($submittedDiscCapacityValue)) {
+            if (is_numeric($submittedDiscCapacityValue)) {
+                $discCapacityId = (int)$submittedDiscCapacityValue;
             } else {
-                $errorMessage = "La capacidad de disco 'Otra' no puede estar vacía.";
+                $newDiscCapacity = trim(filter_input(INPUT_POST, 'disc_capacity', FILTER_UNSAFE_RAW));
+                if (!empty($newDiscCapacity)) {
+                    $discCapacityId = getOrCreateComponentId($pdo, 'disc', 'capacity', $newDiscCapacity);
+                } else {
+                    $errorMessage = "La capacidad de disco no puede estar vacía si se ingresa un valor nuevo.";
+                }
             }
-        } elseif (!empty($submittedDiscCapacity)) {
-            $discCapacityId = (int)$submittedDiscCapacity;
         }
 
-        // GPU Name (Optional field, can be empty)
+        // GPU Name (Optional field)
         $gpuNameId = null;
-        $submittedGpuName = $_POST['gpu_name'] ?? '';
-        if ($submittedGpuName === '_OTHER_') {
-            $newGpuName = trim(filter_input(INPUT_POST, 'gpu_name_other', FILTER_UNSAFE_RAW));
-            if (!empty($newGpuName)) {
-                $gpuNameId = getOrCreateComponentId($pdo, 'gpu', 'name', $newGpuName);
+        $submittedGpuValue = $_POST['gpu_name'] ?? '';
+        if (!empty($submittedGpuValue)) {
+            if (is_numeric($submittedGpuValue)) {
+                $gpuNameId = (int)$submittedGpuValue;
+            } else {
+                $newGpuName = trim(filter_input(INPUT_POST, 'gpu_name', FILTER_UNSAFE_RAW));
+                if (!empty($newGpuName)) {
+                    $gpuNameId = getOrCreateComponentId($pdo, 'gpu', 'name', $newGpuName);
+                }
             }
-        } elseif (!empty($submittedGpuName)) {
-            $gpuNameId = (int)$submittedGpuName;
         }
 
 
@@ -248,14 +249,14 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $pcId = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
     if ($pcId) {
         try {
-            // Select query with JOINs to get actual names/capacities
+            // Select query with JOINs to get actual names/capacities AND their IDs
             $pcQuery = $pdo->prepare("
                 SELECT
                     p.id, p.board_type, p.ram_type, p.disc_type, p.gpu_type, p.wifi, p.bluetooth, p.obser,
-                    c.name AS cpu_name,
-                    r.capacity AS ram_capacity,
-                    d.capacity AS disc_capacity,
-                    g.name AS gpu_name
+                    c.id AS cpu_id, c.name AS cpu_name,
+                    r.id AS ram_id, r.capacity AS ram_capacity,
+                    d.id AS disc_id, d.capacity AS disc_capacity,
+                    g.id AS gpu_id, g.name AS gpu_name
                 FROM pc p
                 LEFT JOIN cpu c ON p.cpu_name = c.id
                 LEFT JOIN ram r ON p.ram_capacity = r.id
@@ -284,10 +285,10 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             $pcQuery = $pdo->prepare("
                 SELECT
                     p.id, p.board_type, p.ram_type, p.disc_type, p.gpu_type, p.wifi, p.bluetooth, p.obser,
-                    c.name AS cpu_name,
-                    r.capacity AS ram_capacity,
-                    d.capacity AS disc_capacity,
-                    g.name AS gpu_name
+                    c.id AS cpu_id, c.name AS cpu_name,
+                    r.id AS ram_id, r.capacity AS ram_capacity,
+                    d.id AS disc_id, d.capacity AS disc_capacity,
+                    g.id AS gpu_id, g.name AS gpu_name
                 FROM pc p
                 LEFT JOIN cpu c ON p.cpu_name = c.id
                 LEFT JOIN ram r ON p.ram_capacity = r.id
@@ -311,90 +312,247 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar PC</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        body { font-family: sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
-        .message { padding: 10px; margin-bottom: 15px; border-radius: 5px; font-weight: bold; }
-        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; }
+        /* Your CSS here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        body.dark {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        body.dark h1 {
+            color: #f4f4f4;
+        }
+
         form {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             margin: 0 auto;
         }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        input[type="text"], select, textarea {
-            width: calc(100% - 22px);
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+
+        body.dark form {
+            background-color: #444;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        input[type="text"]:focus, select:focus, textarea:focus {
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        body.dark label {
+            color: #ddd;
+        }
+
+        /* Adjustments for Select2 */
+        .select2-container--default .select2-selection--single,
+        .select2-container--default .select2-selection--multiple {
+            border: 1px solid #ddd !important; /* Override default Select2 border */
+            border-radius: 4px !important;
+            height: auto !important; /* Allow height to adjust */
+            min-height: 38px; /* Standard height */
+            padding: 5px 10px !important; /* Adjust padding */
+            background-color: #f9f9f9 !important;
+            color: #333 !important;
+            margin-bottom: 15px; /* Add margin bottom like other inputs */
+            box-sizing: border-box;
+        }
+
+        body.dark .select2-container--default .select2-selection--single,
+        body.dark .select2-container--default .select2-selection--multiple {
+            background-color: #555 !important;
+            border-color: #666 !important;
+            color: #f4f4f4 !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 28px !important; /* Adjust text vertical alignment */
+            padding-left: 0 !important; /* Remove default left padding */
+        }
+
+        .select2-container .select2-selection__clear {
+            padding-right: 0 !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px !important; /* Adjust arrow icon height */
+            right: 1px !important;
+        }
+
+        /* Styling for the dropdown results */
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: #007bff !important;
+            color: white !important;
+        }
+
+        .select2-container--default .select2-results__option--selected {
+            background-color: #e4e6eb !important; /* Light grey for selected */
+            color: #333 !important;
+        }
+        body.dark .select2-container--default .select2-results__option--selected {
+            background-color: #666 !important;
+            color: #f4f4f4 !important;
+        }
+
+        /* Input for typing in new tags */
+        .select2-search__field {
+            width: 100% !important; /* Make search field take full width */
+            padding: 10px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 4px !important;
+            box-sizing: border-box !important;
+            background-color: #f9f9f9 !important;
+            color: #333 !important;
+            margin-bottom: 5px;
+        }
+        body.dark .select2-search__field {
+            background-color: #555 !important;
+            border-color: #666 !important;
+            color: #f4f4f4 !important;
+        }
+        .select2-search__field:focus {
+            border-color: #007bff !important;
+            outline: none !important;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2) !important;
+        }
+
+
+        select,
+        input[type="text"],
+        textarea {
+            width: calc(100% - 22px); /* Account for padding and border */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        body.dark select,
+        body.dark input[type="text"],
+        body.dark textarea {
+            background-color: #555;
+            border-color: #666;
+            color: #f4f4f4;
+        }
+
+        select:focus,
+        input[type="text"]:focus,
+        textarea:focus {
             border-color: #007bff;
             outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
         }
-        .checkbox-group {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 10px;
-            width: auto; /* Override default input width */
-        }
-        .checkbox-group label {
-            margin-bottom: 0;
-            display: inline-block;
-        }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
+
         .other-input {
             display: none; /* Hidden by default */
-            margin-top: -10px; /* Adjust spacing */
-            margin-bottom: 20px;
+            margin-top: -5px; /* Adjust to reduce space */
+            margin-bottom: 15px;
         }
-        .other-input input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px dashed #aaa;
-            border-radius: 4px;
-            box-sizing: border-box;
+
+        .other-input input[type="text"] {
+            margin-top: 0;
+            margin-bottom: 0;
         }
-        .radio-group {
-            margin-bottom: 20px;
+
+        .radio-group, .checkbox-group {
+            margin-bottom: 15px;
         }
-        .radio-group label {
+
+        .radio-group label, .checkbox-group label {
             display: inline-block;
             margin-right: 15px;
             font-weight: normal;
         }
-        .radio-group input[type="radio"] {
+
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
             margin-right: 5px;
         }
+
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: auto;
+            display: block;
+            margin: 20px auto 0;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            form {
+                margin: 0 10px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            select,
+            input[type="text"],
+            textarea {
+                width: 100%;
+            }
+        }
     </style>
+    <?php if ($pcData): // Only embed if pcData exists ?>
+    <script>
+        // Pass PHP pcData to JavaScript
+        const pcDataFromPHP = <?php echo json_encode($pcData); ?>;
+    </script>
+    <?php endif; ?>
 </head>
 <body>
     <h1>Editar Componentes de PC</h1>
@@ -421,29 +579,75 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             </select>
 
             <label for="cpu_name">Nombre del Procesador:</label>
-            <select id="cpu_name" name="cpu_name" required onchange="toggleOtherInput('cpu_name', 'cpu_name_other_container')">
-                <?php foreach ($cpuNames as $item): ?>
-                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo ($pcData['cpu_name'] === $item['value']) ? 'selected' : ''; ?>>
+            <select id="cpu_name" name="cpu_name" required>
+                <?php
+                $selectedCpuId = $pcData['cpu_id']; // ID of the current PC's CPU
+                $selectedCpuName = $pcData['cpu_name']; // Name of the current PC's CPU
+
+                // Create a temporary array to hold all options for rendering
+                $cpuOptionsForHtml = $dbCpuNames;
+
+                // Check if the current PC's CPU ID is found in the predefined options
+                $foundSelectedInPredefined = false;
+                foreach ($cpuOptionsForHtml as $option) {
+                    if ($selectedCpuId == $option['id']) {
+                        $foundSelectedInPredefined = true;
+                        break;
+                    }
+                }
+
+                // If the selected CPU ID is NOT among the predefined options,
+                // add it as a new option to ensure it's rendered and selected by default.
+                // This handles previously saved "custom" values.
+                if (!$foundSelectedInPredefined && !empty($selectedCpuId) && !empty($selectedCpuName)) {
+                    $cpuOptionsForHtml[] = ['id' => $selectedCpuId, 'value' => $selectedCpuName];
+                }
+
+                // Sort options by value for better display in dropdown
+                usort($cpuOptionsForHtml, function($a, $b) {
+                    return strcmp($a['value'], $b['value']);
+                });
+
+                foreach ($cpuOptionsForHtml as $item):
+                    $selected = ($selectedCpuId == $item['id']) ? 'selected' : '';
+                ?>
+                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo $selected; ?>>
                         <?php echo htmlspecialchars($item['value']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <div id="cpu_name_other_container" class="other-input">
-                <input type="text" name="cpu_name_other" placeholder="Especifique otro nombre de procesador">
-            </div>
-
             <label for="ram_capacity">Capacidad de RAM (GB):</label>
-            <select id="ram_capacity" name="ram_capacity" required onchange="toggleOtherInput('ram_capacity', 'ram_capacity_other_container')">
-                <?php foreach ($ramCapacities as $item): ?>
-                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo ($pcData['ram_capacity'] === $item['value']) ? 'selected' : ''; ?>>
+            <select id="ram_capacity" name="ram_capacity" required>
+                <?php
+                $selectedRamId = $pcData['ram_id'];
+                $selectedRamCapacity = $pcData['ram_capacity'];
+
+                $ramOptionsForHtml = $dbRamCapacities;
+                $foundSelectedInPredefined = false;
+                foreach ($ramOptionsForHtml as $option) {
+                    if ($selectedRamId == $option['id']) {
+                        $foundSelectedInPredefined = true;
+                        break;
+                    }
+                }
+
+                if (!$foundSelectedInPredefined && !empty($selectedRamId) && !empty($selectedRamCapacity)) {
+                    $ramOptionsForHtml[] = ['id' => $selectedRamId, 'value' => $selectedRamCapacity];
+                }
+
+                usort($ramOptionsForHtml, function($a, $b) {
+                    // Sort numerically for capacity
+                    return ($a['value'] + 0) - ($b['value'] + 0);
+                });
+
+                foreach ($ramOptionsForHtml as $item):
+                    $selected = ($selectedRamId == $item['id']) ? 'selected' : '';
+                ?>
+                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo $selected; ?>>
                         <?php echo htmlspecialchars($item['value']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <div id="ram_capacity_other_container" class="other-input">
-                <input type="text" name="ram_capacity_other" placeholder="Especifique otra capacidad de RAM (ej. 32GB)">
-            </div>
-
             <label for="ram_type">Tipo de RAM:</label>
             <select id="ram_type" name="ram_type" required>
                 <?php foreach ($ramTypes as $item): ?>
@@ -454,17 +658,37 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             </select>
 
             <label for="disc_capacity">Capacidad de Disco (GB):</label>
-            <select id="disc_capacity" name="disc_capacity" required onchange="toggleOtherInput('disc_capacity', 'disc_capacity_other_container')">
-                <?php foreach ($discCapacities as $item): ?>
-                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo ($pcData['disc_capacity'] === $item['value']) ? 'selected' : ''; ?>>
+            <select id="disc_capacity" name="disc_capacity" required>
+                <?php
+                $selectedDiscId = $pcData['disc_id'];
+                $selectedDiscCapacity = $pcData['disc_capacity'];
+
+                $discOptionsForHtml = $dbDiscCapacities;
+                $foundSelectedInPredefined = false;
+                foreach ($discOptionsForHtml as $option) {
+                    if ($selectedDiscId == $option['id']) {
+                        $foundSelectedInPredefined = true;
+                        break;
+                    }
+                }
+
+                if (!$foundSelectedInPredefined && !empty($selectedDiscId) && !empty($selectedDiscCapacity)) {
+                    $discOptionsForHtml[] = ['id' => $selectedDiscId, 'value' => $selectedDiscCapacity];
+                }
+
+                usort($discOptionsForHtml, function($a, $b) {
+                    // Sort numerically for capacity
+                    return ($a['value'] + 0) - ($b['value'] + 0);
+                });
+
+                foreach ($discOptionsForHtml as $item):
+                    $selected = ($selectedDiscId == $item['id']) ? 'selected' : '';
+                ?>
+                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo $selected; ?>>
                         <?php echo htmlspecialchars($item['value']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <div id="disc_capacity_other_container" class="other-input">
-                <input type="text" name="disc_capacity_other" placeholder="Especifique otra capacidad de disco (ej. 2TB)">
-            </div>
-
             <label for="disc_type">Tipo de Disco:</label>
             <select id="disc_type" name="disc_type" required>
                 <?php foreach ($discTypes as $item): ?>
@@ -475,18 +699,46 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             </select>
 
             <label for="gpu_name">Nombre de Tarjeta Gráfica:</label>
-            <select id="gpu_name" name="gpu_name" onchange="toggleOtherInput('gpu_name', 'gpu_name_other_container')">
+            <select id="gpu_name" name="gpu_name">
                 <option value="">Seleccione una tarjeta gráfica (Opcional)</option>
-                <?php foreach ($gpuNames as $item): ?>
-                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo ($pcData['gpu_name'] === $item['value']) ? 'selected' : ''; ?>>
+                <?php
+                $selectedGpuId = $pcData['gpu_id'];
+                $selectedGpuName = $pcData['gpu_name'];
+
+                $gpuOptionsForHtml = $dbGpuNames; // Start with predefined GPUs
+
+                // Check if the currently selected GPU ID is in the predefined list
+                $foundSelectedInPredefined = false;
+                foreach ($gpuOptionsForHtml as $option) {
+                    if ($selectedGpuId == $option['id']) {
+                        $foundSelectedInPredefined = true;
+                        break;
+                    }
+                }
+                // If the selected GPU ID is NOT among the predefined options, add it
+                // This handles previously saved "custom" GPU names.
+                if (!$foundSelectedInPredefined && !empty($selectedGpuId) && !empty($selectedGpuName)) {
+                    $gpuOptionsForHtml[] = ['id' => $selectedGpuId, 'value' => $selectedGpuName];
+                }
+
+                usort($gpuOptionsForHtml, function($a, $b) {
+                    return strcmp($a['value'], $b['value']);
+                });
+
+                foreach ($gpuOptionsForHtml as $item):
+                    // Ensure the correct option is selected, handling the empty case
+                    $selected = '';
+                    if (!empty($selectedGpuId) && ($selectedGpuId == $item['id'])) {
+                        $selected = 'selected';
+                    } elseif (empty($selectedGpuId) && empty($item['id'])) { // For the initial "Select an option"
+                        $selected = 'selected';
+                    }
+                ?>
+                    <option value="<?php echo htmlspecialchars($item['id']); ?>" <?php echo $selected; ?>>
                         <?php echo htmlspecialchars($item['value']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <div id="gpu_name_other_container" class="other-input">
-                <input type="text" name="gpu_name_other" placeholder="Especifique otro nombre de tarjeta gráfica">
-            </div>
-
             <label>Tipo de Tarjeta Gráfica:</label>
             <div class="radio-group">
                 <input type="radio" id="gpu_type_integrada" name="gpu_type_radio" value="integrada" <?php echo ($pcData['gpu_type'] === 'integrada') ? 'checked' : ''; ?>>
@@ -514,77 +766,8 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         <p>Por favor, especifique un ID de PC para editar. Ejemplo: `edit_pc.php?id=1`</p>
     <?php endif; ?>
 
-    <script>
-        // JavaScript to show/hide 'Other' input fields
-        function toggleOtherInput(selectId, otherContainerId) {
-            const selectElement = document.getElementById(selectId);
-            const otherContainer = document.getElementById(otherContainerId);
-            const otherInput = otherContainer ? otherContainer.querySelector('input[type="text"]') : null;
-
-            if (selectElement && otherContainer && otherInput) {
-                if (selectElement.value === '_OTHER_') {
-                    otherContainer.style.display = 'block';
-                    otherInput.setAttribute('required', 'required'); // Make required when visible
-                } else {
-                    otherContainer.style.display = 'none';
-                    otherInput.removeAttribute('required'); // Remove required when hidden
-                    otherInput.value = ''; // Clear value when hidden
-                }
-            }
-        }
-
-        // Initialize 'Other' input visibility on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // List of select IDs that might have an 'Other' input
-            const selectsWithOther = [
-                { selectId: 'cpu_name', containerId: 'cpu_name_other_container' },
-                { selectId: 'ram_capacity', containerId: 'ram_capacity_other_container' },
-                { selectId: 'disc_capacity', containerId: 'disc_capacity_other_container' },
-                { selectId: 'gpu_name', containerId: 'gpu_name_other_container' }
-            ];
-
-            selectsWithOther.forEach(item => {
-                const selectElement = document.getElementById(item.selectId);
-                const otherContainer = document.getElementById(item.containerId);
-
-                if (selectElement && otherContainer) {
-                    // Check if the current pcData value for this select is not in the predefined list
-                    // and if 'Other' is an option in the select.
-                    let isOtherSelected = false;
-                    const pcDataValue = selectId === 'cpu_name' ? 'cpu_name' :
-                                        selectId === 'ram_capacity' ? 'ram_capacity' :
-                                        selectId === 'disc_capacity' ? 'disc_capacity' :
-                                        selectId === 'gpu_name' ? 'gpu_name' : '';
-
-                    if (pcData && pcData[pcDataValue]) {
-                        const existingValues = Array.from(selectElement.options).map(opt => opt.textContent.trim());
-                        if (!existingValues.includes(pcData[pcDataValue]) && selectElement.querySelector('option[value="_OTHER_"]')) {
-                            selectElement.value = '_OTHER_';
-                            otherContainer.style.display = 'block';
-                            const otherInput = otherContainer.querySelector('input[type="text"]');
-                            if (otherInput) {
-                                otherInput.value = pcData[pcDataValue]; // Populate with the actual value
-                                otherInput.setAttribute('required', 'required');
-                            }
-                            isOtherSelected = true;
-                        }
-                    }
-
-                    if (!isOtherSelected) {
-                        // If it's not an 'Other' value or the '_OTHER_' option isn't selected by default
-                        // (e.g., if the value matches an existing one), ensure 'Other' input is hidden.
-                        if (selectElement.value !== '_OTHER_') {
-                             otherContainer.style.display = 'none';
-                             const otherInput = otherContainer.querySelector('input[type="text"]');
-                             if (otherInput) {
-                                 otherInput.removeAttribute('required');
-                                 otherInput.value = '';
-                             }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src ="assets/js/script.js"></script>
 </body>
 </html>
