@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Select2 Initialization for Searchable Dropdowns ---
     // IMPORTANT: Ensure jQuery and Select2 are loaded BEFORE this script executes.
     // In edit_pc.php, these are loaded just before script.js.
-    const select2Selectors = ['#cpu_name', '#ram_capacity', '#disc_capacity', '#gpu_name'];
+    const select2Selectors = ['#board_type', '#cpu_name', '#ram_capacity', '#ram_type', '#disc_capacity', '#disc_type', '#gpu_name'];
 
     select2Selectors.forEach(selector => {
         const selectElement = $(selector); // Use jQuery to select the element
@@ -91,6 +91,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+        // Initialize Select2 specifically for #board_type without allowing new tags
+    const boardTypeSelectElement = $('#board_type');
+    if (boardTypeSelectElement.length) {
+        boardTypeSelectElement.select2({
+            tags: false, // <<<<<<<<<<<<< Set tags to false for board_type
+            placeholder: 'Seleccione un valor', // You might want a different placeholder
+            allowClear: true,
+            width: '100%'
+            // No createTag, templateResult, or templateSelection functions needed here
+            // because new tags are not allowed.
+        });
+    }
 
     // No explicit JS loop here for pre-filling is typically needed if PHP renders options correctly.
     // Select2 will pick up the 'selected' attribute from the HTML options.
