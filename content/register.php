@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (PDOException $e) {
             // Log the error for debugging. NEVER display $e->getMessage() directly to the user in production.
             error_log("Registration PDO Error: " . $e->getMessage());
-            $errorMessage = 'Hubo un problema con el registro. Por favor, inténtalo de nuevo más tarde.' . $e->getMessage();
+            $errorMessage = 'Hubo un problema con el registro. Por favor, inténtalo de nuevo más tarde.';
         }
     }
 }

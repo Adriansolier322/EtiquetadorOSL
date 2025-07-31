@@ -67,8 +67,8 @@ esto se nos creara un directorio llamado EtiquetadorOSL.
 ```bash
 sudo mkdir /var/www/etiquetador
 sudo cp EtiquetadorOSL/content/* /var/www/etiquetador/
-sudo cp /etc/apache2/sites-avaliable/000-default.conf /etc/apache2/sites-avaliable/etiquetador.conf
-sudo nano /etc/apache2/sites-avaliable/etiquetador.conf
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-avaliable/etiquetador.conf
+sudo nano /etc/nginx/sites-available/etiquetador.conf
 ```
 Dentro de este nuevo archivo de configuración debemos cambiar la linea `DocumentRoot /var/www/html` por `DocumentRoot /var/www/etiquetador`
 
@@ -87,7 +87,7 @@ Dentro de la consola de MySQL o MariaDB ejecutaremos
 ```sql
 CREATE DATABASE etiquetador;
 CREATE USER 'etiquetador'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON nombre_DB.* TO 'etiquetador'@'localhost';
+GRANT ALL PRIVILEGES ON etiquetador.* TO 'etiquetador'@'localhost';
 FLUSH PRIVILEGES;
 USE etiquetador;
 SOURCE /var/www/etiquetador/EtiquetadorOSL/scripts/template.sql;
