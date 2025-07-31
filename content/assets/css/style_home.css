@@ -3,13 +3,44 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background-image: linear-gradient(135deg, #a8caec, #1b304e);
+    background-image: linear-gradient(45deg, #a8caec, #1b304e);
     display: flex; /* Use flexbox for body to center content */
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
     color: #2d3748;
+}
+
+/* Main Container Styles - Centers the content */
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Content Wrapper for Welcome and Login */
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px; /* Space between the welcome section and login form */
+    width: 100%;
+    max-width: 900px;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+/* Welcome Section Styles */
+.welcome-section {
+    text-align: center;
+    color: #fff;
+    flex-shrink: 0;
+    padding-right: 20px;
+    max-width: 400px;
 }
 
 /* Estilos de Login/Register Container */
@@ -49,7 +80,7 @@ body {
 
 /* Input Field Styles */
 .form-group input[type="text"],
-.form-group input[type="password"] { /* Added email for register form */
+.form-group input[type="password"]{ /* Added email for register form */
     width: 100%; /* Simplified width */
     padding: 12px;
     border: 1px solid #ccc;
