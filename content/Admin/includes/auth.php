@@ -8,8 +8,8 @@ function isLoggedIn() {
 
 // Redirigir si no está logueado
 function checkAuth() {
-    if (!isLoggedIn()) {
-        header("Location: login.php");
+    if (!isLoggedIn()) {   
+        header("Location: ../index.php");
         exit;
     }
 }
@@ -35,10 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                
-                // Redirigir al usuario
-                header("Location: index.php");
-                exit;
+                $_SESSION['role_id'] = $user['role_id'];
+                if ($_SESSION['role_id'] == 1) {
+                    header("Location: index.php");
+                    exit;
+                } else {
+                    $error = "Acceso denegado. No tiene permisos de administrador.";
+                    session_destroy();
+                    header("Location: ../EtiquetadorOSL/index.php");
+                    exit;
+                }
             } else {
                 $error = "Credenciales incorrectas";
             }

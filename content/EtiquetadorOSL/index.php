@@ -34,7 +34,6 @@
         <div class="form">
             <form action="generate_pdf.php" method="post">
 
-                <!-- Tipo de Placa -->
                 <div class="form-group">
                     <label for="board_type">Tipo de placa:</label>
                     <select name="board_type" id="board_type" required>
@@ -43,7 +42,6 @@
                     </select>
                 </div>
                 <hr>
-                <!-- Nombre CPU -->
                 <div class="form-group">
                     <label for="cpu_name">Nombre CPU:</label>
                     <div class="line">
@@ -62,7 +60,6 @@
                 </div>
                 <hr>
 
-                <!-- Memoria -->
                 <div class="form-group">
                     <label for="ram_capacity">Memoria:</label>
                     <div class="line">
@@ -87,7 +84,6 @@
                     </div>
                 </div>
                 <hr>
-                <!-- Disco duro -->
                 <div class="form-group">
                     <label for="disc_capacity">Disco duro:</label>
                     <div class="line">
@@ -112,7 +108,6 @@
                 </div>
                 <hr>
 
-                <!-- Grafica -->
                 <div class="form-group">
                     <label for="gpu_name">Gráfica:</label>
                     <div class="line">
@@ -135,7 +130,6 @@
                 </div>
                 <hr>
 
-                <!-- WiFi y Bluetooth -->
                 <div class="line">
                     <div class="radio-section">
                         <label>WiFi:</label>
@@ -166,7 +160,6 @@
                     </div>
                     <div class="vertical-line"></div>
 
-                    <!--Numero de serie-->
                     <div class="twodivinline">
                         <label for="SN">Número de serie:</label>
                         <div class="line">
@@ -181,8 +174,7 @@
                             </select>
                             <input type="text" placeholder="Prefijo (ej: ABC)" id="sn_prefix_other" name="sn_prefix_other" maxlength="3">
                         </div>
-                        
-                        <!--Cantidad de etiquetas-->
+
                         <label for="num_pag" style="margin-top: 6px">Cantidad de etiquetas</label>
                         <div class="line">
                             <input type="number" placeholder="1" id="num_pag" name="num_pag" max="50" min="1" value="1" required>
@@ -191,14 +183,12 @@
                 </div>
                 <hr>
 
-                <!-- Observaciones -->
                 <div class="form-group">
                     <label for="observaciones">Observaciones:</label>
                     <textarea id="observaciones" name="observaciones" rows="4" cols="50" placeholder="NO poner más de 5 lineas" maxlength=120></textarea>
                 </div>
                 <hr>
-                
-                <!-- Guardado del model -->
+
                 <div class="form-group">
                     <label for="cbx">Deseas guardar el modelo:</label>
                     <div class="cntr line">
@@ -211,7 +201,6 @@
             </form>
         </div>
 
-        <!-- Preview -->
         <div class="preview">
             <?php
             echo "<iframe id='iframe_preview'src='' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
@@ -222,18 +211,17 @@
         <footer class="footer">
 
         <div class="footer-content">
-           
+
             <div class="footer-buttons">
             <a href="https://github.com/Adriansolier322/EtiquetadorOSL" class="footer-btn" target="_blank">
-            <!-- Logo de GitHub -->
             <svg height="22" viewBox="0 0 16 16" width="22" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-            <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 
+            <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38
                 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52
                 -.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78
-                -.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 
-                .67-.21 2.2.82a7.54 7.54 0 012-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 
-                2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 
-                3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 
+                -.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0
+                .67-.21 2.2.82a7.54 7.54 0 012-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82
+                2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87
+                3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0
                 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>
             </svg>
                 GitHub
@@ -269,10 +257,8 @@
 
             <button class="footer-btn" id="theme-toggle">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2">
-            <!-- Círculo central del sol -->
             <circle cx="32" cy="32" r="12" fill="currentColor" stroke="none"/>
 
-            <!-- Rayos del sol -->
             <line x1="32" y1="4" x2="32" y2="14"/>
             <line x1="32" y1="50" x2="32" y2="60"/>
             <line x1="4" y1="32" x2="14" y2="32"/>
@@ -286,9 +272,9 @@
                 Cambiar Tema
             </button>
             <a href="../Admin" class="footer-btn">Panel administración</a>
+            <a href="logout.php" class="footer-btn">Cerrar sesión</a>
             </div>
-            
-        </div>
+            </div>
         <span class="footer-text">2025 - Oficina de Software Libre</span>
         </footer>
 

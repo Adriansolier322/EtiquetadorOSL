@@ -29,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
                 
                 // Insertar nuevo usuario
-                $insertStmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-                $insertStmt->execute([$newUsername, $passwordHash]);
-                
+                $insertStmt = $pdo->prepare("INSERT INTO users (username, password, role_id) VALUES (?, ?, ?)");
+                $insertStmt->execute([$newUsername, $passwordHash, 2]); // Asignar rol de usuario por defecto
+
                 $successMessage = "Usuario añadido correctamente";
                 // Recargar la lista de usuarios
                 header("Refresh:0");
