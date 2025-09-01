@@ -30,6 +30,9 @@
         <div style="text-align: center; margin-top: 15px;">
             <p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
         </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <p>¿Olvidaste tu contraseña? <a href="forgot_password.php">Recupérala aquí</a></p>
+        </div>
     </div>
 </body>
 </html>

@@ -9,6 +9,9 @@
     <link rel="icon" type="image/jpg" href="assets/favicon.ico"/>
     <link rel="stylesheet" href="assets/css/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="assets/js/script.js"></script>
 
     <title>Etiquetador OSL</title>
@@ -253,7 +256,7 @@
 
                 Sitio Web
             </a>
-
+            
             <button class="footer-btn" id="theme-toggle">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="32" cy="32" r="12" fill="currentColor" stroke="none"/>
@@ -267,7 +270,6 @@
             <line x1="14" y1="50" x2="20" y2="44"/>
             <line x1="50" y1="14" x2="44" y2="20"/>
             </svg>
-
                 Cambiar Tema
             </button>
             <a href="../Admin" class="footer-btn">Panel administración</a>
@@ -276,14 +278,6 @@
             </div>
         <span class="footer-text">2025 - Oficina de Software Libre</span>
         </footer>
-
-
     </section>
-
-
 </body>
-<script>
-
-<script>
-
 </html>

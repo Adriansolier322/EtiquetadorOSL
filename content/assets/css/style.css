@@ -49,7 +49,8 @@ body {
 
 /* Input Field Styles */
 .form-group input[type="text"],
-.form-group input[type="password"] { /* Added email for register form */
+.form-group input[type="password"],
+.form-group input[type="email"] { /* Added email for register form */
     width: 100%; /* Simplified width */
     padding: 12px;
     border: 1px solid #ccc;
@@ -64,10 +65,7 @@ body {
 
 .form-group input[type="text"]:focus,
 .form-group input[type="password"]:focus,
-.form-group input[type="email"]:focus {
-    border-color: #5a9eee;
-    box-shadow: 0 0 0 3px rgba(90, 158, 238, 0.35);
-}
+.form-group input[type="email"]:focus 
 
 /* Button Styles */
 button[type="submit"] {
