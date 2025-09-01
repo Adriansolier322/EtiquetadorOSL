@@ -5,24 +5,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Check user's previously saved preference
     const userPref = localStorage.getItem('theme');
 
+    const applyTheme = (theme) => {
+        const contrary = theme === 'dark' ? 'light' : 'dark';
+        if (document.body.classList.contains(contrary)) {
+            document.body.classList.remove(contrary);
+        }
+        // add preferred theme
+        document.body.classList.add(theme);
+    }
+
     // 2. Apply theme based on preference or system settings
-    if (userPref === 'dark') {
-        document.body.classList.add('dark');
-    } else if (userPref === 'light-mode') {
-        document.body.classList.remove('dark');
-    } else {
+    if (userPref !== null)
+        applyTheme(userPref);
+    else
         // If no preference, check system prefers-color-scheme
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.body.classList.add('dark');
         }
-    }
 
     // 3. Add event listener for the toggle button
     if (themeToggle) { // Ensure the button exists before adding listener
         themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light-mode';
+            // change current theme
+            const currentTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
             localStorage.setItem('theme', currentTheme);
+
+            applyTheme(currentTheme);
         });
     }
 

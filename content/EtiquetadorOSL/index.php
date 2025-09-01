@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/script.js"></script>
 
-
     <title>Etiquetador OSL</title>
 </head>
 <body onload="disableSaveAsk()">
@@ -45,7 +44,7 @@
                 <div class="form-group">
                     <label for="cpu_name">Nombre CPU:</label>
                     <div class="line">
-                    <select name="cpu_name" id="cpu_name" style="width: 25%;">
+                    <select name="cpu_name" id="cpu_name">
                         <option selected disabled>Indefinido</option>
                         <?php
                         $stmt = $conn->prepare("SELECT DISTINCT name FROM cpu ORDER BY name ASC");
@@ -283,4 +282,8 @@
 
 
 </body>
+<script>
+
+<script>
+
 </html>
