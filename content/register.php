@@ -7,18 +7,22 @@ require_once 'includes/config.php'; // Contains your $pdo connection
 
 $errorMessage = '';
 $successMessage = '';
-$username = ''; // Initialize for form value
+$username = '';
+$email = '';
 
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize and trim user inputs
     $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
     $confirm_password = trim($_POST['confirm_password'] ?? '');
 
     // Basic Validations
-    if (empty($username) || empty($password) || empty($confirm_password)) {
+    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
         $errorMessage = 'Todos los campos son obligatorios. Por favor, completa todos los campos.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errorMessage = 'Por favor, introduce una dirección de correo electrónico válida.';
     } elseif ($password !== $confirm_password) {
         $errorMessage = 'Las contraseñas no coinciden.';
     } elseif (strlen($username) < 3 || strlen($username) > 50) {
@@ -27,23 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorMessage = 'La contraseña debe tener al menos 8 caracteres.';
     } else {
         try {
-            // --- Step 1: Check if the user already exists ---
-            $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-            $checkStmt->execute([$username]);
+            // --- Step 1: Check if the user or email already exists ---
+            $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
+            $checkStmt->execute([$username, $email]);
             $userExists = $checkStmt->fetchColumn();
 
             if ($userExists > 0) {
-                // If user exists, set error message
-                $errorMessage = 'El nombre de usuario ya está en uso. Por favor, elige otro.';
+                $errorMessage = 'El nombre de usuario o el email ya están en uso. Por favor, elige otros.';
             } else {
-                // --- Step 2: If username is available, hash password and insert new user ---
+                // --- Step 2: If credentials are available, hash password and insert new user ---
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
                 // Insert the new user into the database
-                // Assuming 'role_id' has a default value in the database or is always set to 2 for new registrations
-                $insertStmt = $pdo->prepare("INSERT INTO users(username, password, role_id) VALUES(?, ?, ?)");
-                // The third parameter '2' assigns the default user role. Adjust if your roles are different.
-                $insertStmt->execute([$username, $passwordHash, 2]);
+                // Assuming 'role_id' is always 2 for new registrations
+                $insertStmt = $pdo->prepare("INSERT INTO users(username, email, password, role_id) VALUES(?, ?, ?, ?)");
+                $insertStmt->execute([$username, $email, $passwordHash, 2]);
 
                 // Set success message in session and redirect
                 $_SESSION['registration_success'] = '¡Registro exitoso! Ahora puedes iniciar sesión.';
@@ -51,9 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit(); // Always exit after a redirect
             }
         } catch (PDOException $e) {
-            // Log the error for debugging. NEVER display $e->getMessage() directly to the user in production.
             error_log("Registration PDO Error: " . $e->getMessage());
-            $errorMessage = 'Hubo un problema con el registro. Por favor, inténtalo de nuevo más tarde.';
+            $errorMessage = 'Hubo un problema con el registro. Por favor, inténtalo de nuevo más tarde.' . $e->getMessage();
         }
     }
 }
@@ -67,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="login-container">
+    <div class="main-container">
         <h1>Crear una cuenta</h1>
         <?php if (!empty($errorMessage)): ?>
             <div class="alert alert-danger">
@@ -85,6 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="username">Nombre de usuario:</label>
                 <input type="text" name="username" id="username" required value="<?php echo htmlspecialchars($username); ?>">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required value="<?php echo htmlspecialchars($email); ?>">
             </div>
             <div class="form-group">
                 <label for="password">Contraseña:</label>

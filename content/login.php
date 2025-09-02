@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="login-container">
+    <div class="main-container">
         <h1>Panel de acceso</h1>
         <?php if(isset($_GET['registered'])): ?>
             <div class="alert alert-success">¡Registro completado! Ya puedes iniciar sesión.</div>
@@ -29,6 +29,9 @@
         </form>
         <div style="text-align: center; margin-top: 15px;">
             <p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <p>¿Olvidaste tu contraseña? <a href="forgot_password.php">Recupérala aquí</a></p>
         </div>
     </div>
 </body>
