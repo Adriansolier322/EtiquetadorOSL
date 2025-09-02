@@ -300,11 +300,23 @@ body.dark .btn:hover {
     transition: all 0.2s;
     display: inline-block;
 }
-
 body.dark .btn-edit {
-    background: #ffc107; /* Brighter yellow */
-    color: #333; /* Darker text for contrast */
+    background: #ffae00; /* Brighter yellow */
 }
+.btn-edit-mail {
+    background: #3a6297;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 8px;
+    transition: all 0.2s;
+    display: inline-block;
+}
+body.dark .btn-edit-mail {
+    background: #308aff; /* Brighter yellow */
+}
+
 
 .btn-edit-rol {
     background: #79B473;

@@ -65,7 +65,10 @@ body {
 
 .form-group input[type="text"]:focus,
 .form-group input[type="password"]:focus,
-.form-group input[type="email"]:focus 
+.form-group input[type="email"]:focus {
+    border-color: #1b304e;
+    box-shadow: 0 0 8px rgba(27, 48, 78, 0.3);
+}
 
 /* Button Styles */
 button[type="submit"] {

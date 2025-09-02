@@ -14,27 +14,28 @@ $users = $usersQuery->fetchAll(PDO::FETCH_ASSOC);
 $successMessage = '';
 $errorMessage = '';
 
-// Procesar formulario de añadir usuario
+// Procesar formulario de añadir, cambiar contraseña, o fail
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['add'])) {
         $newUsername = trim($_POST['username']);
         $newPassword = $_POST['password'];
+        $newEmail = trim($_POST['email']);
         
         // Validar campos
-        if (empty($newUsername) || empty($newPassword)) {
-            $errorMessage = "Por favor complete todos los campos";
+        if (empty($newUsername) || empty($newPassword) || empty($newEmail)) {
+            $errorMessage = "Por favor, complete todos los campos.";
         } else {
             try {
                 // Hash de la contraseña
                 $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
                 
                 // Insertar nuevo usuario
-                $insertStmt = $pdo->prepare("INSERT INTO users (username, password, role_id) VALUES (?, ?, ?)");
-                $insertStmt->execute([$newUsername, $passwordHash, 2]); // Asignar rol de usuario por defecto
+                $insertStmt = $pdo->prepare("INSERT INTO users (username, password, email, role_id) VALUES (?, ?, ?, ?)");
+                $insertStmt->execute([$newUsername, $passwordHash, $newEmail, 2]); // Asignar rol de usuario por defecto
 
-                $successMessage = "Usuario añadido correctamente";
+                $successMessage = "Usuario añadido correctamente.";
                 // Recargar la lista de usuarios
-                header("Refresh:0");
+                header("Location: users.php");
                 exit;
             } catch (PDOException $e) {
                 $errorMessage = "Error al añadir usuario: " . $e->getMessage();
@@ -45,39 +46,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $userId = $_POST['userId'];
 
         if (empty($newpass)) {
-            $errorMessage = "Por favor complete todos los campos";
+            $errorMessage = "Por favor, complete todos los campos.";
         } else {
             try {
-                $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-                $stmt->execute([$newpass,$userId]);
+                $stmt = $pdo->prepare("UPDATE users SET password = ?, updated_at = NOW() WHERE id = ?");
+                $stmt->execute([$newpass, $userId]);
                 header("Location: users.php");
                 exit;
 
             } catch (PDOException $e) {
-                $errorMessage = "Error al cambiar la contraseña";
+                $errorMessage = "Error al cambiar la contraseña: " . $e->getMessage();
             }
         }
-    }
+    } elseif (isset($_POST['newemail'])) {
+        $newEmail = trim($_POST['email']);
+        $userId = $_POST['userId'];
+
+        if (empty($newEmail) || !filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+            $errorMessage = "Por favor, ingrese un correo electrónico válido.";
+        } else {
+            try {
+                $stmt = $pdo->prepare("UPDATE users SET email = ?, updated_at = NOW() WHERE id = ?");
+                $stmt->execute([$newEmail, $userId]);
+                
+                $successMessage = "Correo electrónico actualizado correctamente.";
+                header("Location: users.php");
+                exit;
+            } catch (PDOException $e) {
+                $errorMessage = "Error al cambiar el correo electrónico: " . $e->getMessage();
+            }
+        }
+    } 
 }
 
 // Procesar eliminación de usuario
 if (isset($_GET['delete'])) {
     $userId = (int)$_GET['delete'];
     try {
-        $count = $pdo->prepare("SELECT COUNT(*) FROM users")->execute();
-        if ($count<1) {
-            exit;
+        $countStmt = $pdo->query("SELECT COUNT(*) FROM users");
+        $count = $countStmt->fetchColumn();
+        if ($count < 1) {
+            $errorMessage = "No se puede eliminar el último usuario.";
+        } else {
+            $deleteStmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+            $deleteStmt->execute([$userId]);
+            $successMessage = "Usuario eliminado correctamente.";
         }
-
-        $deleteStmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
-        $deleteStmt->execute([$userId]);
-        $successMessage = "Usuario eliminado correctamente";
         header("Location: users.php");
         exit;
     } catch (PDOException $e) {
         $errorMessage = "Error al eliminar usuario: " . $e->getMessage();
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -86,6 +107,17 @@ if (isset($_GET['delete'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Usuarios</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .qr-code-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .qr-code-container img {
+            border: 1px solid #ddd;
+            padding: 5px;
+            background-color: #fff;
+        }
+    </style>
 </head>
 <body>
     <?php include 'includes/sidebar.php'; ?>
@@ -110,6 +142,9 @@ if (isset($_GET['delete'])) {
                     
                     <label for="password">Contraseña:</label>
                     <input type="password" id="password" name="password" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
                 <button type="submit" name="add" class="btn">Añadir Usuario</button>
             </form>
@@ -122,6 +157,7 @@ if (isset($_GET['delete'])) {
                     <tr>
                         <th>ID</th>
                         <th>Usuario</th>
+                        <th>Email</th>
                         <th>Creado el</th>
                         <th>Actualizado el</th>
                         <th>Acciones</th>
@@ -132,11 +168,18 @@ if (isset($_GET['delete'])) {
                     <tr>
                         <td><?php echo (int)$user['id']; ?></td>
                         <td><?php echo htmlspecialchars($user['username']); ?></td>
+                        <td><?php echo htmlspecialchars($user['email']); ?></td>
                         <td><?php echo htmlspecialchars($user['created_at']); ?></td>
                         <td><?php echo htmlspecialchars($user['updated_at']); ?></td>
                         <td class="actions">
-                            <a class="btn-edit" onclick="openEditModal(<?php echo (int)$user['id']; ?>, '<?php echo htmlspecialchars($user['username']); ?>')">
+                            <a class="btn-edit" onclick="openEditPasswordModal(<?php echo (int)$user['id']; ?>, '<?php echo htmlspecialchars($user['username']); ?>')">
                                 Cambiar Contraseña
+                            </a>
+                            <a class="btn-edit-mail" onclick="openEditEmailModal(<?php echo (int)$user['id']; ?>, '<?php echo htmlspecialchars($user['username']); ?>', '<?php echo htmlspecialchars($user['email']); ?>')">
+                                Cambiar Email
+                            </a>
+                            <a class="btn-edit-rol" href="edit_role.php?user_id=<?php echo (int)$user['id']; ?>">
+                                Cambiar Rol
                             </a>
                             <a href="users.php?delete=<?php echo (int)$user['id']; ?>" class="btn-delete" 
                                onclick="return confirm('¿Está seguro que desea eliminar este usuario?')">
@@ -150,15 +193,15 @@ if (isset($_GET['delete'])) {
         </div>
         
         <!-- Modal para cambiar contraseña -->
-        <div id="editModal" class="modal">
+        <div id="editPasswordModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close" onclick="closeModal('editPasswordModal')">&times;</span>
                 <h2>Cambiar Contraseña</h2>
                 <form method="post">
-                    <input type="hidden" id="edit_user_id" name="userId">
+                    <input type="hidden" id="edit_password_user_id" name="userId">
                     <div class="form-group">
-                        <label for="edit_username">Usuario:</label>
-                        <input type="text" id="edit_username" readonly>
+                        <label for="edit_password_username">Usuario:</label>
+                        <input type="text" id="edit_password_username" readonly>
                         
                         <label for="new_password">Nueva Contraseña:</label>
                         <input type="password" id="new_password" name="password" required>
@@ -167,26 +210,52 @@ if (isset($_GET['delete'])) {
                 </form>
             </div>
         </div>
+
+        <!-- Nuevo Modal para cambiar email -->
+        <div id="editEmailModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('editEmailModal')">&times;</span>
+                <h2>Cambiar Correo Electrónico</h2>
+                <form method="post">
+                    <input type="hidden" id="edit_email_user_id" name="userId">
+                    <div class="form-group">
+                        <label for="edit_email_username">Usuario:</label>
+                        <input type="text" id="edit_email_username" readonly>
+                        
+                        <label for="new_email">Nuevo Correo:</label>
+                        <input type="email" id="new_email" name="email" required>
+                    </div>
+                    <button type="submit" name="newemail" class="btn">Actualizar Email</button>
+                </form>
+            </div>
+        </div>
     </div>
     
     <script src="assets/js/script.js"></script>
     <script>
-    // Función para abrir el modal de edición
-    function openEditModal(userId, username) {
-        document.getElementById('edit_user_id').value = userId;
-        document.getElementById('edit_username').value = username;
-        document.getElementById('editModal').style.display = 'block';
+    function openEditPasswordModal(userId, username) {
+        document.getElementById('edit_password_user_id').value = userId;
+        document.getElementById('edit_password_username').value = username;
+        document.getElementById('editPasswordModal').style.display = 'block';
     }
     
-    // Cerrar modal al hacer clic en la X
-    document.querySelector('.modal .close').addEventListener('click', function() {
-        document.getElementById('editModal').style.display = 'none';
-    });
+    function openEditEmailModal(userId, username, email) {
+        document.getElementById('edit_email_user_id').value = userId;
+        document.getElementById('edit_email_username').value = username;
+        document.getElementById('new_email').value = email;
+        document.getElementById('editEmailModal').style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
     
-    // Cerrar modal al hacer clic fuera
     window.addEventListener('click', function(event) {
-        if (event.target == document.getElementById('editModal')) {
-            document.getElementById('editModal').style.display = 'none';
+        if (event.target == document.getElementById('editPasswordModal')) {
+            closeModal('editPasswordModal');
+        }
+        if (event.target == document.getElementById('editEmailModal')) {
+            closeModal('editEmailModal');
         }
     });
     </script>
