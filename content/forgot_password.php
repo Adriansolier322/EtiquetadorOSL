@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com'; // Servidor SMTP; NECESITA SER UNO REAL
                 $mail->SMTPAuth = true;
-                $mail->Username = 'noreply.etiquetadorosl@gmail.com'; // CORREO
-                $mail->Password = 'rxhm pefw bqhr szvi'; // CONTRASEÑA, por motivos de seguridad NO se mostrará 
+                $mail->Username = 'jaja,nop;)'; // CORREO
+                $mail->Password = 'jaja,nope:)'; // CONTRASEÑA, por motivos de seguridad NO se mostrará 
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
 
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="main-content">
+    <div class="main-container">
         <h1>Restablecer Contraseña</h1>
         <?php if (!empty($successMessage)): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($successMessage); ?></div>

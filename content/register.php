@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="login-container">
+    <div class="main-container">
         <h1>Crear una cuenta</h1>
         <?php if (!empty($errorMessage)): ?>
             <div class="alert alert-danger">

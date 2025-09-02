@@ -13,7 +13,7 @@ body {
 }
 
 /* Estilos de Login/Register Container */
-.login-container {
+.main-container {
     background: rgba(255, 255, 255, .2); 
     padding: 40px;
     border-radius: 12px;
@@ -27,8 +27,8 @@ body {
     margin: 0;
 }
 
-/* Title Styling for h1 inside .login-container */
-.login-container h1 {
+/* Title Styling for h1 inside .main-container */
+.main-container h1 {
     font-size: 2.2em;
     margin-bottom: 30px;
     font-weight: 700;
@@ -97,23 +97,22 @@ button[type="submit"]:active {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Register/Login Link Container */
-/* We target .login-container p directly */
-.login-container p {
+/* We target .main-container p directly */
+.main-container p {
     margin-top: 25px;
     font-size: 0.95em;
     color: #f0f0f0;
 }
 
-/* We target .login-container p a directly */
-.login-container p a {
+/* We target .main-container p a directly */
+.main-container p a {
     color: #fff;
     text-decoration: none;
     font-weight: 700;
     transition: text-decoration 0.3s ease;
 }
 
-.login-container p a:hover {
+.main-container p a:hover {
     text-decoration: underline;
 }
 
@@ -161,7 +160,7 @@ button[type="submit"]:active {
         font-size: 1.1em;
     }
 
-    .login-container { /* This applies to both forms when visible */
+    .main-container { /* This applies to both forms when visible */
         margin: 0 auto;
     }
 }

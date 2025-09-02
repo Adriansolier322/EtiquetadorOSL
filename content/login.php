@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="login-container">
+    <div class="main-container">
         <h1>Panel de acceso</h1>
         <?php if(isset($_GET['registered'])): ?>
             <div class="alert alert-success">¡Registro completado! Ya puedes iniciar sesión.</div>

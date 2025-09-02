@@ -49,6 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $user) {
             $deleteStmt->execute([$token]);
             
             $successMessage = "Contraseña actualizada correctamente. Ahora puede iniciar sesión.";
+
+            // Redireccionar al login después de 5 segundos
+            header("refresh:5;url=login.php");
+            
             $user = null; // Ocultar el formulario
             
         } catch (PDOException $e) {
@@ -66,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $user) {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="main-content">
+    <div class="main-container">
         <h1>Restablecer Contraseña</h1>
         <?php if (!empty($successMessage)): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($successMessage); ?></div>
