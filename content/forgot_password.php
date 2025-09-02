@@ -2,18 +2,16 @@
 /**
 Hay que instalar composer,
 sudo apt install composer
-después ejecutar
-composer remove phpgangsta/googleauthenticator
+Asegúrate de tenerlos en la ruta correcta
 composer require phpmailer/phpmailer
+Si Composer muestra un error de conflicto de dependencias con Google Authenticator,
+es posible que tengas que eliminar esa dependencia con el comando:
+composer remove phpgangsta/googleauthenticator
 */
 
 // Incluir archivos necesarios
 require 'includes/config.php';
-// Incluir los archivos de PHPMailer
-// Asegúrate de tenerlos en la ruta correcta
-// Si Composer muestra un error de conflicto de dependencias con Google Authenticator,
-// es posible que tengas que eliminar esa dependencia con el comando:
-// composer remove phpgangsta/googleauthenticator
+
 require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -106,9 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <button type="submit" class="btn">Enviar Enlace</button>
             </form>
-            <div class="form-group">        
-                <a href="login.php" class="btn">Volver a login</a>
-            </div>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">     
+            <p><a href="login.php" class="btn">Volver a login</a></p>
         </div>
     </div>
 </body>
