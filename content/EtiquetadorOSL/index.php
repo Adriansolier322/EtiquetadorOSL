@@ -272,7 +272,7 @@
             </svg>
                 Cambiar Tema
             </button>
-            <a href="../Admin" class="footer-btn">Panel administración</a>
+            <a href="../Admin/login.php" class="footer-btn">Panel administración</a>
             <a href="logout.php" class="footer-btn">Cerrar sesión</a>
             </div>
             </div>
