@@ -20,15 +20,18 @@ if (!is_numeric($modelId)) {
 }
 
 try {
+    // Preparar y ejecutar la consulta
     $stmt = $conn->prepare("UPDATE models SET name = ? WHERE id = ?");
     $stmt->execute([$modelName, $modelId]);
-    
+    // Verificar si se actualizó algún registro
     if ($stmt->rowCount() > 0) {
         echo json_encode(['success' => true, 'newName' => $modelName]);
     } else {
         echo json_encode(['error' => 'No se actualizó ningún registro']);
     }
-} catch (Exception $e) {
+} 
+// Error en la base de datos
+catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Error en la base de datos: ' . $e->getMessage()]);
 }

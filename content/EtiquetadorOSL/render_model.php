@@ -39,11 +39,12 @@ html, body {
 
 <div class="container">
 <?php
+// Validar el parámetro modelId
 if ($modelId === null) {
     echo "<p style='color:red;'>Error: Falta el parámetro <strong>modelId</strong>.</p>";
     exit;
 }
-
+// Consulta para obtener los detalles del modelo
 try {
     $stmt = $conn->prepare("
         SELECT 
@@ -64,12 +65,13 @@ try {
     ");
     $stmt->execute([$modelId]);
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    // Verificar si se encontraron datos
     if (!$data) {
         echo "<p>No se encontró ningún modelo con ID: <strong>$modelId</strong></p>";
         exit;
     }
 
+    // Mostrar los datos en una tabla
     echo "<h2>Detalles del PC #{$data['id']}</h2>";
     echo "<table class='tabla-modelo'>";
     foreach ($data as $campo => $valor) {

@@ -5,7 +5,7 @@ import re
 import pymupdf
 from fillpdf import fillpdfs
 
-
+# PdfCreator: Clase principal para la creación de PDFs a partir de una plantilla.
 class PdfCreator:
     def __init__(self):
         """
@@ -16,7 +16,7 @@ class PdfCreator:
         self.parse_arguments()
         if self.clean == "true":
             self.cleanup(False)
-
+    # Elimina archivos previos para evitar conflictos
     def cleanup(self, remove_also_generado: bool):
         """
         Elimina el archivo 'pdf/generado.pdf' y elimina recursivamente la carpeta 'pdf/raid' 
@@ -108,7 +108,7 @@ class PdfCreator:
             self.observaciones = sys.argv[17]
         except IndexError:
             self.observaciones = ""
-
+    # Método para imprimir información de depuración
     def debug_info(self):
         """
         Imprime información de depuración basada en los argumentos procesados 
@@ -132,7 +132,7 @@ class PdfCreator:
         print(f"Label Name     : {self.name}")
         print("==================")
         sys.exit()
-
+    # Crea el PDF utilizando la plantilla y los datos proporcionados
     def create_pdf(self):
         """
         Crea el PDF utilizando la plantilla y un diccionario con los valores recopilados a partir de los argumentos.
@@ -158,7 +158,7 @@ class PdfCreator:
         if self.end == "true" and self.is_single == "false":
             self.merge_pdfs()
 
-
+    # Combina todos los PDFs generados en un solo archivo
     def merge_pdfs(self):
         raid_folder = "pdf/raid"
         output_path = "pdf/generado.pdf"

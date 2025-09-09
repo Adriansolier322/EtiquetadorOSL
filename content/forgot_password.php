@@ -16,12 +16,15 @@ require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+// Inicializar variables
 $successMessage = '';
 $errorMessage = '';
 
+// Si el formulario es enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
-
+    // Si el email no es válido
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorMessage = "Por favor, ingrese un correo electrónico válido.";
     } else {
@@ -44,19 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Crear el enlace de restablecimiento
                 $resetLink = "http://localhost/reset_password.php?token=" . $token;
 
-                // --- CONFIGURACIÓN DE PHPMailer ---
+                //CONFIGURACIÓN DE PHPMailer
                 $mail = new PHPMailer(true);
                 // Configuración de SMTP
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com'; // Servidor SMTP; NECESITA SER UNO REAL
                 $mail->SMTPAuth = true;
-                $mail->Username = 'noreply.etiquetadorosl@gmail.com'; // CORREO
-                $mail->Password = '----'; // CONTRASEÑA, por motivos de seguridad NO se mostrará
+                $mail->Username = '---'; // CORREO
+                $mail->Password = '---'; // CONTRASEÑA, por motivos de seguridad NO se mostrará
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
 
                 // Destinatarios
-                $mail->setFrom('-----', 'etiquetadorOSL');
+                $mail->setFrom('---', 'etiquetadorOSL');
                 $mail->addAddress($email);
 
                 // Contenido
@@ -67,11 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->send();
 
                 $successMessage = "Se ha enviado un correo electrónico con las instrucciones para restablecer su contraseña.";
-            } else {
+            } 
+            //Si no existe el email(no está registrado)
+            else {
                 $errorMessage = "El correo electrónico no se encuentra en nuestra base de datos.";
             }
-        } catch (Exception $e) {
-            $errorMessage = "Error al enviar el correo: " . $mail->ErrorInfo;
+        } 
+        //Si hay un error en la base de datos
+        catch (Exception $e) {
+            $errorMessage = "Error al enviar el correo: ";
         }
     }
 }
