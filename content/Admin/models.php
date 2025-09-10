@@ -93,6 +93,7 @@ $models = $pdo->query("SELECT * FROM models ORDER BY name")->fetchAll(PDO::FETCH
     </div>
     
     <script>
+    // Función para abrir el modal de edición y rellenar los campos
     function editCPU(id, name) {
         document.getElementById('edit_id').value = id;
         document.getElementById('edit_name').value = name;
@@ -103,7 +104,7 @@ $models = $pdo->query("SELECT * FROM models ORDER BY name")->fetchAll(PDO::FETCH
     document.querySelector('.close').addEventListener('click', function() {
         document.getElementById('editModal').style.display = 'none';
     });
-    
+    // Cerrar modal al hacer clic fuera del contenido
     window.addEventListener('click', function(event) {
         if (event.target == document.getElementById('editModal')) {
             document.getElementById('editModal').style.display = 'none';

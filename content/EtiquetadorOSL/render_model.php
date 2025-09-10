@@ -16,24 +16,22 @@ $modelId = isset($_GET['modelId']) ? $_GET['modelId'] : null;
 </head>
 <body>
 <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-}
+    .container {
+        flex: 1;
+        padding: 20px;
+    }
 
-.container {
-    flex: 1;
-    padding: 20px;
-}
-
-.footer {
-    margin: 7px;
-}
-
+    .footer {
+        margin: 7px;
+    }
 </style>
 
 

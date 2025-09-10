@@ -44,23 +44,23 @@
                     link.parentElement.classList.add('active');
                 }
             });
-           // Theme Toggle Logic
+           // Lógica de cambio de tema
             const themeToggle = document.getElementById('theme-toggle');
             const body = document.body;
-            
-            // Apply theme on load
+
+            // Aplicar tema al cargar
             const currentTheme = localStorage.getItem('theme');
             if (currentTheme) {
                 body.classList.add(currentTheme);
             }
 
-            // Add click listener
-            // It's good practice to check if the element exists before adding an event listener
-            if (themeToggle) { 
+            // Agregar listener de clic
+            // Es una buena práctica verificar si el elemento existe antes de agregar un event listener
+            if (themeToggle) {
                 themeToggle.addEventListener('click', () => {
                     if (body.classList.contains('dark-theme')) {
                         body.classList.remove('dark-theme');
-                        localStorage.setItem('theme', ''); // Store empty string for light theme
+                        localStorage.setItem('theme', ''); // Almacenar un string vacío para el tema claro
                     } else {
                         body.classList.add('dark-theme');
                         localStorage.setItem('theme', 'dark-theme');

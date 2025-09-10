@@ -1,26 +1,21 @@
 <?php
-// Enable error reporting for development (remove or restrict in production)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Include your database connection (PDO)
-// Make sure this file correctly establishes your $pdo connection
+// Incluir tu conexión a la base de datos (PDO)
+// Comprobar que este archivo establece correctamente tu conexión $pdo
 require_once 'includes/config.php';
 
-$pcData = null; // Initialize to null
+$pcData = null; // Inicializar a null
 $errorMessage = "";
 $successMessage = "";
 
 /**
- * Fetches distinct values (ID and Name/Capacity) from a lookup table.
- * Used for CPU, RAM, Disc, GPU dropdowns.
+ * Recupera distintos valores (ID and Name/Capacity) de una tabla de búsqueda.
+ * Usado para CPU, RAM, Disc, GPU dropdowns.
  *
- * @param PDO $pdo The PDO database connection object.
- * @param string $tableName The name of the lookup table (e.g., 'cpu', 'ram').
- * @param string $idColumn The name of the ID column (always 'id').
- * @param string $valueColumn The name of the value column (e.g., 'name', 'capacity').
- * @return array An array of associative arrays, each containing 'id' and 'value'.
+ * @param PDO $pdo La conexión PDO a la base de datos.
+ * @param string $tableName El nombre de la tabla de búsqueda (por ejemplo, 'cpu', 'ram').
+ * @param string $idColumn El nombre de la columna de ID (siempre 'id').
+ * @param string $valueColumn El nombre de la columna de valor (por ejemplo, 'name', 'capacity').
+ * @return array Un array de arrays asociativos, cada uno conteniendo 'id' y 'value'.
  */
 function fetchDistinctComponentValues($pdo, $tableName, $idColumn, $valueColumn) {
     try {
@@ -42,12 +37,12 @@ function fetchDistinctComponentValues($pdo, $tableName, $idColumn, $valueColumn)
 }
 
 /**
- * Fetches distinct string values directly from the 'pc' table.
- * Used for ram_type, disc_type dropdowns (board_type and gpu_type are now hardcoded/checkboxes).
+ * Recupera distintos valores string directamente desde la tabla 'pc'.
+ * Usado por ram_type, disc_type dropdowns (board_type y gpu_type son checkboxes).
  *
- * @param PDO $pdo The PDO database connection object.
- * @param string $columnName The column name from the 'pc' table.
- * @return array A simple array of distinct string values (e.g., ['ATX', 'Micro-ATX']).
+ * @param PDO $pdo La conexión PDO a la base de datos.
+ * @param string $columnName El nombre de la columna de la tabla 'pc'.
+ * @return array Un array simple de valores de cadena distintos (por ejemplo, ['ATX', 'Micro-ATX']).
  */
 function fetchDistinctPcFieldValues($pdo, $columnName) {
     try {
@@ -61,17 +56,17 @@ function fetchDistinctPcFieldValues($pdo, $columnName) {
 }
 
 /**
- * Checks if a component value exists in a lookup table. If not, inserts it and returns its ID.
+ * Comprueba si el valor de un componente existe en una tabla de búsqueda. Si no, lo inserta y devuelve su ID.
  *
- * @param PDO $pdo The PDO database connection object.
- * @param string $tableName The name of the lookup table (e.g., 'cpu', 'ram').
- * @param string $columnName The name of the value column (e.g., 'name', 'capacity').
- * @param string $value The value to check/insert.
- * @return int The ID of the existing or newly inserted component.
- * @throws PDOException If there's a database error.
+ * @param PDO $pdo La conexión PDO a la base de datos.
+ * @param string $tableName El nombre de la tabla de búsqueda (por ejemplo, 'cpu', 'ram').
+ * @param string $columnName El nombre de la columna de valor (por ejemplo, 'name', 'capacity').
+ * @param string $value El valor a comprobar/inserir.
+ * @return int El ID del componente existente o recién insertado.
+ * @throws PDOException Si hay un error en la base de datos.
  */
 function getOrCreateComponentId($pdo, $tableName, $columnName, $value) {
-    // Check if value exists
+    // Comprueba si el valor existe
     $stmt = $pdo->prepare("SELECT id FROM $tableName WHERE $columnName = ?");
     $stmt->execute([$value]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -79,7 +74,7 @@ function getOrCreateComponentId($pdo, $tableName, $columnName, $value) {
     if ($result) {
         return (int)$result['id'];
     } else {
-        // Insert new value
+        // Inserta el nuevo valor y devuelve su ID
         $stmt = $pdo->prepare("INSERT INTO $tableName ($columnName) VALUES (?)");
         $stmt->execute([$value]);
         return (int)$pdo->lastInsertId();
@@ -87,40 +82,40 @@ function getOrCreateComponentId($pdo, $tableName, $columnName, $value) {
 }
 
 
-// --- Get options from database for all relevant fields ---
-// Component lookup tables (ID and Value)
+// --- Obtener opciones de la base de datos para todos los campos relevantes ---
+// Tablas de búsqueda de componentes (ID y Valor)
 $dbCpuNames = fetchDistinctComponentValues($pdo, 'cpu', 'id', 'name');
 $dbRamCapacities = fetchDistinctComponentValues($pdo, 'ram', 'id', 'capacity');
 $dbDiscCapacities = fetchDistinctComponentValues($pdo, 'disc', 'id', 'capacity');
 $dbGpuNames = fetchDistinctComponentValues($pdo, 'gpu', 'id', 'name');
 
-// Direct PC table fields (string values)
-// Board Type: Hardcoded options, 'Other' removed
-$boardTypesRaw = ['UEFI', 'BIOS']; // Hardcoded values
+// Tabla directa de los campos de la tabla PC (valores de cadena)
+// Board Type: opciones hardcodeadas, 'Other' quitado
+$boardTypesRaw = ['UEFI', 'BIOS']; // valores hardcodeados 
 sort($boardTypesRaw);
 $boardTypes = array_map(function($val) { return ['value' => $val]; }, $boardTypesRaw);
 
-// RAM Types: Hardcoded options + fetched from DB, sorted, then 'Other'
+// RAM Types: opciones hardcodeadas + obtenidas de la base de datos, ordenadas, luego 'Other'
 $ramTypesRaw = array_unique(array_merge(['DDR2','DDR3', 'DDR4', 'DDR5'], fetchDistinctPcFieldValues($pdo, 'ram_type')));
 sort($ramTypesRaw);
 $ramTypes = array_map(function($val) { return ['value' => $val]; }, $ramTypesRaw);
 
-// Disc Types: Hardcoded options
-$discTypesRaw = ['NVMe', 'HDD', 'SSD']; // Hardcoded values
+// Disc Types: opciones hardcodeadas
+$discTypesRaw = ['NVMe', 'HDD', 'SSD']; // valores hardcodeados
 sort($discTypesRaw);
 $discTypes = array_map(function($val) { return ['value' => $val]; }, $discTypesRaw);
 
 
-// --- Handle Form Submission (POST Request) ---
+// --- Procesar formulario de edición de PC (POST) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
     $pcId = filter_input(INPUT_POST, 'pc_id', FILTER_SANITIZE_NUMBER_INT);
 
-    // Handle direct string fields from POST (Board Type, RAM Type, Disc Type)
+    // Manejar campos de cadena directa del POST (Board Type, RAM Type, Disc Type)
     $boardType = trim(filter_input(INPUT_POST, 'board_type', FILTER_UNSAFE_RAW));
     $ramType = trim(filter_input(INPUT_POST, 'ram_type', FILTER_UNSAFE_RAW));
     $discType = trim(filter_input(INPUT_POST, 'disc_type', FILTER_UNSAFE_RAW));
 
-    // Handle GPU Type radio button
+    // Manejar botón de radio de tipo GPU
     $gpuType = $_POST['gpu_type_radio'] ?? '';
     $gpuType = trim(filter_var($gpuType, FILTER_UNSAFE_RAW));
 
@@ -130,16 +125,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
     $obser = trim(filter_input(INPUT_POST, 'obser', FILTER_UNSAFE_RAW));
 
 
-    // Handle component IDs (CPU, RAM, Disc, GPU) - Now supporting Select2's tags
+    // Manejar IDs de componentes (CPU, RAM, Disc, GPU) - Ahora soportando etiquetas de Select2
     try {
-        // CPU Name
+        // Nombre de la CPU
         $cpuNameId = null;
-        $submittedCpuValue = $_POST['cpu_name'] ?? ''; // This can be an ID or a new text from Select2
+        $submittedCpuValue = $_POST['cpu_name'] ?? ''; // Esto puede ser un ID o un nuevo texto de Select2
         if (!empty($submittedCpuValue)) {
             if (is_numeric($submittedCpuValue)) {
-                $cpuNameId = (int)$submittedCpuValue; // It's an existing ID
+                $cpuNameId = (int)$submittedCpuValue; // Es un ID existente
             } else {
-                // It's a non-numeric string, meaning a new tag was entered
+                // Es una cadena no numérica, lo que significa que se ingresó una nueva etiqueta
                 $newCpuName = trim(filter_input(INPUT_POST, 'cpu_name', FILTER_UNSAFE_RAW)); // Use submittedCpuValue directly
                 if (!empty($newCpuName)) {
                     $cpuNameId = getOrCreateComponentId($pdo, 'cpu', 'name', $newCpuName);
@@ -149,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
             }
         }
 
-        // RAM Capacity
+        // Capacidad RAM
         $ramCapacityId = null;
         $submittedRamCapacityValue = $_POST['ram_capacity'] ?? '';
         if (!empty($submittedRamCapacityValue)) {
@@ -165,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
             }
         }
 
-        // Disc Capacity
+        // Capacidad de Disco
         $discCapacityId = null;
         $submittedDiscCapacityValue = $_POST['disc_capacity'] ?? '';
         if (!empty($submittedDiscCapacityValue)) {
@@ -181,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
             }
         }
 
-        // GPU Name (Optional field)
+        // Nombre de GPU (Campo opcional)
         $gpuNameId = null;
         $submittedGpuValue = $_POST['gpu_name'] ?? '';
         if (!empty($submittedGpuValue)) {
@@ -196,11 +191,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
         }
 
 
-        // Basic server-side validation for required fields
+        // Validación básica del lado del servidor para campos obligatorios
         if (empty($pcId) || empty($boardType) || empty($cpuNameId) || empty($ramCapacityId) || empty($ramType) || empty($discCapacityId) || empty($discType) || !empty($errorMessage)) {
             $errorMessage = $errorMessage ?: "Todos los campos obligatorios deben ser llenados.";
         } else {
-            // Update query with actual table column names (which are foreign keys now)
+            // Actualizar la PC en la base de datos
             $updateQuery = $pdo->prepare("UPDATE pc SET
                 board_type = ?,
                 cpu_name = ?,
@@ -231,9 +226,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
             ]);
 
             if ($updateQuery->rowCount() > 0) {
-                // Redirect to pc.php after successful update
+                // Redirigir a pc.php después de la actualización exitosa
                 header('Location: pc.php');
-                exit(); // Important to stop further script execution
+                exit(); // Importante detener la ejecución del script
             } else {
                 $errorMessage = "No se realizaron cambios o la PC no fue encontrada.";
             }
@@ -244,12 +239,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc'])) {
     }
 }
 
-// --- Load PC Data for Display (GET Request or after POST if not redirecting) ---
+// Cargar datos de la PC para mostrar (Solicitud GET o después de POST si no se redirige)
 if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $pcId = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
     if ($pcId) {
         try {
-            // Select query with JOINs to get actual names/capacities AND their IDs
+            // Consulta SELECT con JOINs para obtener los nombres/capacidades reales Y sus IDs
             $pcQuery = $pdo->prepare("
                 SELECT
                     p.id, p.board_type, p.ram_type, p.disc_type, p.gpu_type, p.wifi, p.bluetooth, p.obser,
@@ -277,8 +272,8 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $errorMessage = "ID de PC no válido.";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit_pc']) && !$pcData) {
-    // If it was a POST request that failed, we still need to load the data
-    // to repopulate the form, using the pc_id from the POST data.
+    // Si la solicitud POST falló, aún necesitamos cargar los datos
+    // para repoblar el formulario, utilizando el pc_id de los datos POST.
     $pcId = filter_input(INPUT_POST, 'pc_id', FILTER_SANITIZE_NUMBER_INT);
     if ($pcId) {
         try {
@@ -314,7 +309,6 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
     <title>Editar PC</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        /* Your CSS here */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -363,17 +357,17 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             color: #ddd;
         }
 
-        /* Adjustments for Select2 */
+        /* Ajustes para Select2 */
         .select2-container--default .select2-selection--single,
         .select2-container--default .select2-selection--multiple {
-            border: 1px solid #ddd !important; /* Override default Select2 border */
+            border: 1px solid #ddd !important; /* Sobrescribir el borde predeterminado de Select2 */
             border-radius: 4px !important;
-            height: auto !important; /* Allow height to adjust */
-            min-height: 38px; /* Standard height */
-            padding: 5px 10px !important; /* Adjust padding */
+            height: auto !important; /* Permitir que la altura se ajuste */
+            min-height: 38px; /* Altura estándar */
+            padding: 5px 10px !important; /* Ajustar el relleno */
             background-color: #f9f9f9 !important;
             color: #333 !important;
-            margin-bottom: 15px; /* Add margin bottom like other inputs */
+            margin-bottom: 15px; /* Agregar margen inferior como otros campos */
             box-sizing: border-box;
         }
 
@@ -385,8 +379,8 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 28px !important; /* Adjust text vertical alignment */
-            padding-left: 0 !important; /* Remove default left padding */
+            line-height: 28px !important; /* Ajustar la alineación vertical del texto */
+            padding-left: 0 !important; /* Eliminar el relleno izquierdo predeterminado */
         }
 
         .select2-container .select2-selection__clear {
@@ -394,18 +388,18 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         }
 
         .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 36px !important; /* Adjust arrow icon height */
+            height: 36px !important; /* Ajustar la altura del icono de la flecha */
             right: 1px !important;
         }
 
-        /* Styling for the dropdown results */
+        /* Estilo para los resultados del dropdown */
         .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
             background-color: #007bff !important;
             color: white !important;
         }
 
         .select2-container--default .select2-results__option--selected {
-            background-color: #e4e6eb !important; /* Light grey for selected */
+            background-color: #e4e6eb !important; /* Gris claro para seleccionado */
             color: #333 !important;
         }
         body.dark .select2-container--default .select2-results__option--selected {
@@ -413,9 +407,9 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             color: #f4f4f4 !important;
         }
 
-        /* Input for typing in new tags */
+        /* Entrada para escribir en los nuevos tags */
         .select2-search__field {
-            width: 100% !important; /* Make search field take full width */
+            width: 100% !important; /* Hacer que el campo de búsqueda ocupe todo el ancho */
             padding: 10px !important;
             border: 1px solid #ddd !important;
             border-radius: 4px !important;
@@ -439,12 +433,12 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         select,
         input[type="text"],
         textarea {
-            width: calc(100% - 22px); /* Account for padding and border */
+            width: calc(100% - 22px); /* Ajustar para el relleno y el borde */
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            box-sizing: border-box; /* Incluir el relleno y el borde en el ancho y alto total del elemento */
             background-color: #f9f9f9;
             color: #333;
         }
@@ -466,8 +460,8 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         }
 
         .other-input {
-            display: none; /* Hidden by default */
-            margin-top: -5px; /* Adjust to reduce space */
+            display: none; /* Oculto por defecto */
+            margin-top: -5px; /* Ajustar para reducir el espacio */
             margin-bottom: 15px;
         }
 
@@ -528,7 +522,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             border: 1px solid #f5c6cb;
         }
 
-        /* Responsive adjustments */
+        /* Ajustes para dispositivos móviles */
         @media (max-width: 768px) {
             form {
                 margin: 0 10px;
@@ -547,9 +541,9 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         }
     </style>
-    <?php if ($pcData): // Only embed if pcData exists ?>
+    <?php if ($pcData): // Solo embebido si pcData existe ?>
     <script>
-        // Pass PHP pcData to JavaScript
+        // Pasar pcData de PHP a JavaScript
         const pcDataFromPHP = <?php echo json_encode($pcData); ?>;
     </script>
     <?php endif; ?>
@@ -565,7 +559,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
         <div class="message error"><?php echo htmlspecialchars($errorMessage); ?></div>
     <?php endif; ?>
 
-    <?php if ($pcData): // Only display the form if PC data was successfully loaded ?>
+    <?php if ($pcData): // Solo mostrar el formulario si los datos de la PC se cargaron correctamente ?>
         <form action="" method="POST">
             <input type="hidden" name="pc_id" value="<?php echo htmlspecialchars($pcData['id']); ?>">
 
@@ -581,13 +575,13 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             <label for="cpu_name">Nombre del Procesador:</label>
             <select id="cpu_name" name="cpu_name" required>
                 <?php
-                $selectedCpuId = $pcData['cpu_id']; // ID of the current PC's CPU
-                $selectedCpuName = $pcData['cpu_name']; // Name of the current PC's CPU
+                $selectedCpuId = $pcData['cpu_id']; // ID del CPU de la PC actual
+                $selectedCpuName = $pcData['cpu_name']; // Nombre del CPU de la PC actual
 
-                // Create a temporary array to hold all options for rendering
+                // Crear un array temporal para contener todas las opciones para renderizar
                 $cpuOptionsForHtml = $dbCpuNames;
 
-                // Check if the current PC's CPU ID is found in the predefined options
+                // Verificar si el ID del CPU de la PC actual se encuentra en las opciones predefinidas
                 $foundSelectedInPredefined = false;
                 foreach ($cpuOptionsForHtml as $option) {
                     if ($selectedCpuId == $option['id']) {
@@ -596,14 +590,14 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
                     }
                 }
 
-                // If the selected CPU ID is NOT among the predefined options,
-                // add it as a new option to ensure it's rendered and selected by default.
-                // This handles previously saved "custom" values.
+                // Si el ID de CPU seleccionado no está entre las opciones predefinidas,
+                // agrégalo como una nueva opción para asegurarte de que se renderice y se seleccione por defecto.
+                // Esto maneja valores "personalizados" guardados previamente.
                 if (!$foundSelectedInPredefined && !empty($selectedCpuId) && !empty($selectedCpuName)) {
                     $cpuOptionsForHtml[] = ['id' => $selectedCpuId, 'value' => $selectedCpuName];
                 }
 
-                // Sort options by value for better display in dropdown
+                // Ordenar opciones por valor para una mejor visualización en el desplegable
                 usort($cpuOptionsForHtml, function($a, $b) {
                     return strcmp($a['value'], $b['value']);
                 });
@@ -636,7 +630,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
                 }
 
                 usort($ramOptionsForHtml, function($a, $b) {
-                    // Sort numerically for capacity
+                    // Ordenar numéricamente por capacidad
                     return ($a['value'] + 0) - ($b['value'] + 0);
                 });
 
@@ -677,7 +671,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
                 }
 
                 usort($discOptionsForHtml, function($a, $b) {
-                    // Sort numerically for capacity
+                    // Ordenar numéricamente por capacidad
                     return ($a['value'] + 0) - ($b['value'] + 0);
                 });
 
@@ -705,9 +699,9 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
                 $selectedGpuId = $pcData['gpu_id'];
                 $selectedGpuName = $pcData['gpu_name'];
 
-                $gpuOptionsForHtml = $dbGpuNames; // Start with predefined GPUs
+                $gpuOptionsForHtml = $dbGpuNames; // Comenzar con GPUs predefinidos
 
-                // Check if the currently selected GPU ID is in the predefined list
+                // Verificar si el ID de GPU actualmente seleccionado está en la lista predefinida
                 $foundSelectedInPredefined = false;
                 foreach ($gpuOptionsForHtml as $option) {
                     if ($selectedGpuId == $option['id']) {
@@ -715,8 +709,8 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
                         break;
                     }
                 }
-                // If the selected GPU ID is NOT among the predefined options, add it
-                // This handles previously saved "custom" GPU names.
+                // Si el ID GPU no está entre los predefinidos, añadirlo
+                // Esto maneja nombres de GPU "personalizados" guardados previamente.
                 if (!$foundSelectedInPredefined && !empty($selectedGpuId) && !empty($selectedGpuName)) {
                     $gpuOptionsForHtml[] = ['id' => $selectedGpuId, 'value' => $selectedGpuName];
                 }
@@ -726,7 +720,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
                 });
 
                 foreach ($gpuOptionsForHtml as $item):
-                    // Ensure the correct option is selected, handling the empty case
+                    // Determinar si esta opción debe ser seleccionada
                     $selected = '';
                     if (!empty($selectedGpuId) && ($selectedGpuId == $item['id'])) {
                         $selected = 'selected';

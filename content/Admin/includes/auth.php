@@ -2,9 +2,9 @@
 include 'config.php';
 
 /**
- * Checks if a user is currently logged in.
+ * Revisa si el usuario está logueado.
  *
- * @return bool True if logged in, false otherwise.
+ * @return bool Verdadero si está logueado, falso en caso contrario.
  */
 
 function isLoggedIn() {
@@ -13,37 +13,36 @@ function isLoggedIn() {
 
 // Redirigir si no está logueado
 
-// Secure Authentication Functions
-// This file should be included at the very top of any page that requires a user to be logged in,
-// especially for admin-level access.
+// Funciones de autenticación seguras
+// Este archivo debe incluirse en la parte superior de cualquier página que requiera que un usuario esté logueado,
+// especialmente para el acceso a nivel de administrador.
 
-// Start the session if it's not already started
+// Iniciar sesión si no se ha iniciado ya
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
 /**
- * Checks if the logged-in user has the administrator role.
- * Assumes an admin has a role_id of 1.
+ * Revisa si el usuario logueado tiene el rol de administrador.
+ * Se asume que un administrador tiene un role_id de 1.
  *
- * @return bool True if the user is an admin, false otherwise.
+ * @return bool Verdadero si el usuario es un administrador, falso en caso contrario.
  */
 function isAdministrator() {
     return isLoggedIn() && isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1;
 }
 
 /**
- * Redirects the user to the login page if they are not authenticated as an administrator.
- * This function should be called at the very beginning of every secure page.
+ * Redirecciona a la página de login si el usuario no está logueado o no es administrador.
  */
 function checkAuth() {
-    // If the user is not an administrator, destroy the session and redirect them.
+    // Si el usuario no es un administrador, destruir la sesión y redirigirlo.
     if (!isAdministrator() || !isLoggedIn()){
-        // Destroy the session to ensure no lingering credentials
+        // Destruir la sesión para asegurar que no queden credenciales
         session_destroy();
-        // Redirect to the external login page.
+        // Redirigir a la página de login externa.
         header("Location: ../EtiquetadorOSL/index.php");
-        // Exit to stop script execution immediately
+        // Salir para detener la ejecución del script inmediatamente
         exit;
     }
 }
@@ -70,6 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role_id'] = $user['role_id'];
+                // Redirigir según el rol
+                // Si es administrador, ir a admin/index.php
+                // Si no, destruir la sesión y redirigir a la página de login externa
+                // para evitar acceso no autorizado
+                // Esto asegura que solo los administradores puedan acceder al área de administración
+                // y que otros usuarios sean redirigidos adecuadamente.
                 if ($_SESSION['role_id'] == 1) {
                     header("Location: index.php");
                     exit;

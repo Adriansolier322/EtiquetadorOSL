@@ -48,11 +48,11 @@ checkAuth();
     <script>
     // Colores para los gráficos
     const chartColors = [
-        'rgba(54, 162, 235, 0.7)',
-        'rgba(255, 99, 132, 0.7)',
-        'rgba(75, 192, 192, 0.7)',
-        'rgba(255, 159, 64, 0.7)',
-        'rgba(153, 102, 255, 0.7)',
+        'rgba(54, 162, 235, 0.7)',   // Azul
+        'rgba(255, 99, 132, 0.7)',   // Rojo
+        'rgba(75, 192, 192, 0.7)',   // Verde agua
+        'rgba(255, 159, 64, 0.7)',   // Naranja
+        'rgba(153, 102, 255, 0.7)',  // Morado
         'rgba(255, 206, 86, 0.7)',   // Amarillo
         'rgba(201, 203, 207, 0.7)',  // Gris claro
         'rgba(100, 181, 246, 0.7)',  // Azul cielo

@@ -4,6 +4,10 @@ require_once 'auth.php';
 
 header('Content-Type: application/json');
 
+/**
+ * Este archivo devuelve estadísticas sobre los PCs en formato JSON.
+ * Parámetro GET 'stat' puede ser 'cpu', 'ram', 'disc' o 'gpu' para obtener diferentes estadísticas.
+ */ 
 try {
     $stat = $_GET['stat'] ?? 'cpu';
     
@@ -56,10 +60,10 @@ try {
         default:
             throw new Exception("Tipo de estadística no válido");
     }
-    
+    // Ejecutar la consulta
     $stmt = $pdo->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+    // Formatear los datos para la respuesta JSON
     $data = [
         'labels' => array_column($results, 'label'),
         'values' => array_column($results, 'value')
