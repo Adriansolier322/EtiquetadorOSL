@@ -53,13 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com'; // Servidor SMTP; NECESITA SER UNO REAL
                 $mail->SMTPAuth = true;
-                $mail->Username = '---'; // CORREO
-                $mail->Password = '---'; // CONTRASEÑA, por motivos de seguridad NO se mostrará
+                $mail->Username = 'noreply.etiquetadorosl@gmail.com'; // CORREO
+                $mail->Password = 'emih dnkf xigm prqx'; // CONTRASEÑA, por motivos de seguridad NO se mostrará
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
 
                 // Destinatarios
-                $mail->setFrom('---', 'etiquetadorOSL');
+                $mail->setFrom('noreply.etiquetadorosl@gmail.com', 'etiquetadorOSL');
                 $mail->addAddress($email);
 
                 // Contenido

@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit33cad13092641f81b77ea1ff6e1ca5db
 {
     public static $prefixLengthsPsr4 = array (
+        'R' => 
+        array (
+            'RobThree\\Auth\\' => 14,
+        ),
         'P' => 
         array (
             'PHPMailer\\PHPMailer\\' => 20,
@@ -14,6 +18,10 @@ class ComposerStaticInit33cad13092641f81b77ea1ff6e1ca5db
     );
 
     public static $prefixDirsPsr4 = array (
+        'RobThree\\Auth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/robthree/twofactorauth/lib',
+        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
@@ -22,6 +30,7 @@ class ComposerStaticInit33cad13092641f81b77ea1ff6e1ca5db
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'PHPGangsta_GoogleAuthenticator' => __DIR__ . '/..' . '/phpgangsta/googleauthenticator/PHPGangsta/GoogleAuthenticator.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
