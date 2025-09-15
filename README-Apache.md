@@ -107,3 +107,7 @@ Con esto ya estaria todo listo.
 ```bash
 sudo chown -R www-data:www-data '/var/www' && sudo chmod -R 660 '/var/www' && sudo find '/var/www' -type d -exec chmod 2770 {} +
 ```  
+>[!important]
+> El usuario admin inicial tiene las siguientes credenciales, por favor, es importante cambiarlo una vez esté desplegado y configurado.
+> Usuario: admin
+> Contraseña: admin123 
