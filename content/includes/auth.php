@@ -41,14 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 $mail = new PHPMailer(true);
                 try {
                     $mail->isSMTP();
-                    $mail->Host = 'smtp.gmail.com'; 
+                    $mail->Host = 'smtp.gmail.com';
                     $mail->SMTPAuth = true;
                     $mail->Username = '---';
                     $mail->Password = '---';
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
                     $mail->Port = 465;
 
-                    $mail->setFrom('---', '---');  //Correo, nombre
+                    $mail->setFrom('---', '---'); //Correo, nombre
                     $mail->addAddress($user['email'], $user['username']);
                     $mail->isHTML(false);
                     $mail->Subject = "Tu codigo de verificacion 2FA";

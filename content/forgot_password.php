@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->Port = 587;
 
                 // Destinatarios
-                $mail->setFrom('---', '---');   //Correo, nombre
+                $mail->setFrom('---', '---');  //Correo, nombre
                 $mail->addAddress($email);
 
                 // Contenido
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->Subject = "Restablecimiento de Contraseña";
                 $mail->Body    = "Haga clic en el siguiente enlace para restablecer su contraseña: <a href='{$resetLink}'>{$resetLink}</a>";
                 
-                // Enviar el correo
+                //Enviar el correo 
                 $mail->send();
 
                 $successMessage = "Se ha enviado un correo electrónico con las instrucciones para restablecer su contraseña.";
