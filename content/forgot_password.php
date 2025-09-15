@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $insertStmt->execute([$user['id'], $token, $expires]);
 
                 // Crear el enlace de restablecimiento
-                $resetLink = "http://<url>/reset_password.php?token=" . $token;
+                $resetLink = "http://localhost/reset_password.php?token=" . $token;
 
                 //CONFIGURACIÓN DE PHPMailer
                 $mail = new PHPMailer(true);
