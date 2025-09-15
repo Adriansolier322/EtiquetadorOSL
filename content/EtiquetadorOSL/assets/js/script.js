@@ -1,6 +1,7 @@
+// Cambio de tema claro/oscuro
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.getElementById('theme-toggle');
-
+    // Comprobar preferencia del usuario o del sistema
     const userPref = localStorage.getItem('theme');
     if (userPref) {
         document.body.classList.add(userPref);
@@ -11,28 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('light');
         }
     }
-
+    // Añadir evento al botón
     toggle.addEventListener('click', () => {
         document.body.classList.toggle('dark');
         document.body.classList.toggle('light');
         const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
         localStorage.setItem('theme', currentTheme);
     });
-
-
 });
 
 
 
-
+// Función para preguntar al usuario si quiere salir sin guardar
 function disableSaveAsk(){
     window.onbeforeunload = null;
-    refresh_iframe()
+    refresh_iframe();
 }
 
+// Función para refrescar el iframe, para PDFs
 function refresh_iframe() {
     const iframe = document.getElementById('iframe_preview');
-    
+    // Comprobar si el PDF generado existe
     fetch('pdf/generado.pdf', { method: 'HEAD' })
         .then(response => {
             if (response.ok) {
@@ -45,13 +45,13 @@ function refresh_iframe() {
             // Añadir timestamp para evitar caché
             iframe.src = `${data}?t=${Date.now()}`;
         })
-
 }
       
 
 
 // Función para cargar y mostrar modelos
 function loadModel() {
+    // Hacer una petición al archivo PHP
     try {
     fetch('get_saved_models.php')
     .then(response => {
@@ -60,6 +60,7 @@ function loadModel() {
         }
         return response.json();
     })
+    // Procesar los datos y crear botones
     .then(data => {
         let htmlButtons = '';
         data.forEach(model => {
@@ -99,7 +100,9 @@ function loadModel() {
             }
         })
     })
-    } catch (error) {
+    } 
+    // Si hay un error en la petición
+    catch (error) {
         console.error('Error en loadModel:', error);
         Swal.fire({
             title: 'Error',
@@ -155,8 +158,9 @@ function applyModel(modelId) {
             })
         })
         Swal.close();
-        
-    } catch (error) {
+    } 
+    // Si hay un error en la petición
+    catch (error) {
         console.error('Error en applyModel:', error);
     }
 }
@@ -200,7 +204,7 @@ function deleteModel(modelName, modelId, buttonElement) {
     });
 }
 
-
+// Función para editar el nombre de un modelo
 function editModelName(modelName, modelId) {
     Swal.close()
     const form = `<div class="saved-file-item">
@@ -208,7 +212,7 @@ function editModelName(modelName, modelId) {
                 </div>`;
     
 
-
+    // Mostrar el popup con SweetAlert
     Swal.fire({
         title: `Editar nombre del modelo "${modelName}"`,
         html: form,

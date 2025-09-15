@@ -30,6 +30,7 @@ $data = [
     'observaciones'       => $_POST['observaciones'] ?? ''
 ];
 
+// Mapeo de campos manuales a sus correspondientes tablas y columnas
 $manualFields = [
     'cpu'  => ['field' => 'cpu_other_name', 'target' => 'cpu_name', 'column' => 'name'],
     'ram'  => ['field' => 'ram_other_capacity', 'target' => 'ram_capacity', 'column' => 'capacity'],
@@ -43,6 +44,7 @@ $ram_id = null;
 $disc_id = null;
 $gpu_id = null;
 
+// Procesar cada campo manual
 foreach ($manualFields as $table => $info) {
     if (!empty($data[$info['field']])) {
         $data[$info['target']] = $data[$info['field']];
@@ -76,6 +78,7 @@ $num_pag = (int)$data['num_pag'];
 
 $clean = "true";
 
+// Determinar si es un solo PDF o múltiples
 $num_pag = (int)($data['num_pag']);
 $is_single = $num_pag < 2 ? "true" : "false";
 $total_pages = $is_single=="true" ? 1 : $num_pag;
@@ -151,7 +154,7 @@ for ($i = 1; $i <= $num_pag; $i++) {
 
 }
 
-
+// Guardar el modelo si se ha marcado la casilla
 if ($data['checkbox_save'] == 'True') {
 
     $stmt = $conn->prepare("SELECT MAX(id) AS last_num FROM pc");
@@ -162,7 +165,7 @@ if ($data['checkbox_save'] == 'True') {
     $stmt->execute([$data['ticket_name'], $last_num]);
 }
 
-
+// Redirigir de vuelta a la página principal
 sleep(0.1);
 header("Location: index.php"); // Comenta esta línea si estás haciendo pruebas
 

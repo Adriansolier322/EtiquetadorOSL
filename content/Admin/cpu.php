@@ -30,7 +30,7 @@ if (isset($_GET['delete'])) {
         $error = "Error al buscar: " . $e->getMessage();
     }
 }
-
+// Si hay búsqueda, filtrar resultados
 if (isset($_GET['search'])) {
     $txt = $_GET['search'];
     try {
@@ -48,6 +48,7 @@ if (isset($_GET['search'])) {
 
 // Procesar formulario (POST)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Añadir o editar CPU
     if (isset($_POST['add'])) {
         $name = trim($_POST['name']);
         if (!empty($name)) {
@@ -164,6 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     
     <script>
+    // Función para abrir modal y cargar datos
     function editCPU(id, name) {
         document.getElementById('edit_id').value = id;
         document.getElementById('edit_name').value = name;
@@ -174,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     document.querySelector('.close').addEventListener('click', function() {
         document.getElementById('editModal').style.display = 'none';
     });
-    
+    // Cerrar modal al hacer clic fuera del contenido
     window.addEventListener('click', function(event) {
         if (event.target == document.getElementById('editModal')) {
             document.getElementById('editModal').style.display = 'none';

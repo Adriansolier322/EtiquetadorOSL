@@ -16,12 +16,15 @@ require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+// Inicializar variables
 $successMessage = '';
 $errorMessage = '';
 
+// Si el formulario es enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
-
+    // Si el email no es válido
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorMessage = "Por favor, ingrese un correo electrónico válido.";
     } else {
@@ -42,9 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $insertStmt->execute([$user['id'], $token, $expires]);
 
                 // Crear el enlace de restablecimiento
-                $resetLink = "http://localhost/reset_password.php?token=" . $token;
+                $resetLink = "http://<url>/reset_password.php?token=" . $token;
 
-                // --- CONFIGURACIÓN DE PHPMailer ---
+                //CONFIGURACIÓN DE PHPMailer
                 $mail = new PHPMailer(true);
                 // Configuración de SMTP
                 $mail->isSMTP();
@@ -56,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->Port = 587;
 
                 // Destinatarios
-                $mail->setFrom('---', 'etiquetadorOSL');
+                $mail->setFrom('---', '---');   //Correo, nombre
                 $mail->addAddress($email);
 
                 // Contenido
@@ -64,14 +67,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->Subject = "Restablecimiento de Contraseña";
                 $mail->Body    = "Haga clic en el siguiente enlace para restablecer su contraseña: <a href='{$resetLink}'>{$resetLink}</a>";
                 
+                // Enviar el correo
                 $mail->send();
 
                 $successMessage = "Se ha enviado un correo electrónico con las instrucciones para restablecer su contraseña.";
-            } else {
+            } 
+            //Si no existe el email(no está registrado)
+            else {
                 $errorMessage = "El correo electrónico no se encuentra en nuestra base de datos.";
             }
-        } catch (Exception $e) {
-            $errorMessage = "Error al enviar el correo: " . $mail->ErrorInfo;
+        } 
+        //Si hay un error en la base de datos
+        catch (Exception $e) {
+            $errorMessage = "Error al enviar el correo: ";
         }
     }
 }

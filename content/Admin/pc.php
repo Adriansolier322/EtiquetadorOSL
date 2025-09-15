@@ -143,6 +143,7 @@ try {
                             <tr>
                                 <td><?php echo (int)$pc['id']; ?></td>
                                 <td><?php
+                                    // Obtener y mostrar el SN asociado
                                     $stmt = $pdo->prepare("SELECT sn.prefix as prefix, sn.num as num FROM sn JOIN sn_pc ON sn.id = sn_pc.sn_id WHERE sn_pc.pc_id = :pc_id;");
                                     $stmt->bindParam(':pc_id', $pc['id'], PDO::PARAM_INT);
                                     $stmt->execute();
@@ -154,6 +155,7 @@ try {
                                 <td><?php echo htmlspecialchars($pc['cpu_name_text']); ?></td>
                                 <td>
                                     <?php
+                                    // Muestra la capacidad y tipo de RAM
                                     echo $pc['ram_capacity_text'] ? (int)$pc['ram_capacity_text'] . 'GB ' : '';
                                     echo htmlspecialchars($pc['ram_type']);
                                     ?>
@@ -174,6 +176,7 @@ try {
                                 </td>
                                 <td>
                                     <?php
+                                    // Mostrar estado de WiFi y Bluetooth
                                     if ($pc['wifi']=="false"){
                                         $wifi = "<input type='checkbox' disabled>";
                                     } else {

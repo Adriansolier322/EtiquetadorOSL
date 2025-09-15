@@ -1,37 +1,42 @@
 <?php
-// Display all errors for development (remove in production)
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-require_once 'includes/config.php'; // Contains your $pdo connection
-
+require_once 'includes/config.php'; // Contiene tu $pdo conexión
+// Variables para mensajes y datos del formulario
 $errorMessage = '';
 $successMessage = '';
 $username = '';
 $email = '';
 
-// Process form submission
+// Proceso de envío del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize and trim user inputs
+    // Sanitiza y valida entradas
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
     $confirm_password = trim($_POST['confirm_password'] ?? '');
 
-    // Basic Validations
+    // Validaciones básicas
+    //Si algún campo está vacío
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
         $errorMessage = 'Todos los campos son obligatorios. Por favor, completa todos los campos.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    //Si el email no es válido
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorMessage = 'Por favor, introduce una dirección de correo electrónico válida.';
-    } elseif ($password !== $confirm_password) {
+    } 
+    //Si las contraseñas no coinciden
+    elseif ($password !== $confirm_password) {
         $errorMessage = 'Las contraseñas no coinciden.';
-    } elseif (strlen($username) < 3 || strlen($username) > 50) {
+    } 
+    //Si el nombre de usuario no tiene entre 3 y 50 caracteres
+    elseif (strlen($username) < 3 || strlen($username) > 50) {
         $errorMessage = 'El nombre de usuario debe tener entre 3 y 50 caracteres.';
-    } elseif (strlen($password) < 8) {
-        $errorMessage = 'La contraseña debe tener al menos 8 caracteres.';
+    } 
+    //Si la contraseña no tiene al menos 12 caracteres
+    elseif (strlen($password) < 12) {
+        $errorMessage = 'La contraseña debe tener al menos 12 caracteres.';
     } else {
         try {
-            // --- Step 1: Check if the user or email already exists ---
+            // Verificar si el usuario o el email ya existen
             $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
             $checkStmt->execute([$username, $email]);
             $userExists = $checkStmt->fetchColumn();
@@ -39,22 +44,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($userExists > 0) {
                 $errorMessage = 'El nombre de usuario o el email ya están en uso. Por favor, elige otros.';
             } else {
-                // --- Step 2: If credentials are available, hash password and insert new user ---
+                // --- Si las credenciales son válidas, hashea la contraseña e inserta el nuevo usuario ---
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-                // Insert the new user into the database
-                // Assuming 'role_id' is always 2 for new registrations
+                // Insertamos el nuevo usuario en la base de datos
+                // Suponemos que 'role_id' es siempre 2 para nuevos registros
                 $insertStmt = $pdo->prepare("INSERT INTO users(username, email, password, role_id) VALUES(?, ?, ?, ?)");
                 $insertStmt->execute([$username, $email, $passwordHash, 2]);
 
-                // Set success message in session and redirect
+                // Poner el mensaje de éxito en la sesión y redirigir
                 $_SESSION['registration_success'] = '¡Registro exitoso! Ahora puedes iniciar sesión.';
                 header('Location: login.php');
-                exit(); // Always exit after a redirect
+                exit(); // Siempre salir después de una redirección
             }
-        } catch (PDOException $e) {
+        } 
+        //Si hay un error con la base de datos
+        catch (PDOException $e) {
             error_log("Registration PDO Error: " . $e->getMessage());
-            $errorMessage = 'Hubo un problema con el registro. Por favor, inténtalo de nuevo más tarde.' . $e->getMessage();
+            $errorMessage = 'Hubo un problema con el registro. Por favor, inténtalo de nuevo más tarde.';
         }
     }
 }

@@ -50,6 +50,7 @@
                     <select name="cpu_name" id="cpu_name">
                         <option selected disabled>Indefinido</option>
                         <?php
+                        // Consulta para obtener nombres de CPU distintos
                         $stmt = $conn->prepare("SELECT DISTINCT name FROM cpu ORDER BY name ASC");
                         $stmt->execute();
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -68,6 +69,7 @@
                         <select name="ram_capacity" id="ram_capacity" style="width: 25%;">
                             <option selected disabled>Indefinido</option>
                             <?php
+                            // Consulta para obtener capacidades de RAM distintas
                             $stmt = $conn->prepare("SELECT DISTINCT capacity FROM ram ORDER BY capacity");
                             $stmt->execute();
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -92,6 +94,7 @@
                         <select name="disc_capacity" id="disc_capacity" style="width: 25%;">
                             <option selected disabled>Indefinido</option>
                             <?php
+                            // Consulta para obtener capacidades de disco distintas
                             $stmt = $conn->prepare("SELECT DISTINCT capacity FROM disc ORDER BY capacity");
                             $stmt->execute();
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -116,6 +119,7 @@
                         <select name="gpu_name" id="gpu_name" style="width: 25%;">
                             <option selected disabled>Indefinido</option>
                             <?php
+                            // Consulta para obtener nombres de GPU distintos
                             $stmt = $conn->prepare("SELECT DISTINCT name FROM gpu ORDER BY name ASC");
                             $stmt->execute();
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -167,6 +171,7 @@
                         <div class="line">
                             <select name="sn_prefix" id="sn_prefix">
                             <?php
+                            // Consulta para obtener prefijos distintos
                             $stmt = $conn->prepare("SELECT DISTINCT prefix FROM sn ORDER BY id asc");
                             $stmt->execute();
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -205,6 +210,7 @@
 
         <div class="preview">
             <?php
+            // Aquí se cargará el iframe con la vista previa
             echo "<iframe id='iframe_preview'src='' frameborder='0' width='100%' height='100%' title='Preview' style='border:none'></iframe>";
             ?>
 
@@ -272,7 +278,7 @@
             </svg>
                 Cambiar Tema
             </button>
-            <a href="../Admin" class="footer-btn">Panel administración</a>
+            <a href="../Admin/login.php" class="footer-btn">Panel administración</a>
             <a href="logout.php" class="footer-btn">Cerrar sesión</a>
             </div>
             </div>

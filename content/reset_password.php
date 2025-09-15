@@ -19,7 +19,7 @@ if (!empty($token)) {
         $userStmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
         $userStmt->execute([$resetData['user_id']]);
         $user = $userStmt->fetch(PDO::FETCH_ASSOC);
-
+        // Si no se encuentra el usuario
         if (!$user) {
             $errorMessage = "Error al encontrar el usuario asociado al token.";
         }

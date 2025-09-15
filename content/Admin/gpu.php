@@ -32,7 +32,7 @@ if (isset($_GET['delete'])) {
         $errorMessage = "Error al eliminar GPU: " . $e->getMessage();
     }
 }
-
+// Procesar búsqueda de GPUs (GET)
 if (isset($_GET['search'])) {
     $txt = $_GET['search'];
     try {

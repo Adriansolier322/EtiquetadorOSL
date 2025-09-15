@@ -665,3 +665,92 @@ body.dark .close-button:focus {
         font-size: 0.9rem;
     }
 }
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+}
+
+.main-container h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+body.dark .main-container h1 {
+    color: #eee;
+}
+
+.main-container form {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+body.dark .main-container form {
+    background: #333;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.main-container .btn {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    padding: 15px;
+}
+
+.alert {
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+}
+
+.main-container p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 20px;
+}
+
+body.dark .main-container p {
+    color: #bbb;
+}
+
+.main-container a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+body.dark .main-container a {
+    color: #007bff;
+}
+
+.main-container a:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+body.dark .main-container a:hover {
+    color: #0056b3;
+}

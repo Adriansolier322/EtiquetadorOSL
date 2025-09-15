@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['newpass'])) {
         $newpass = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $userId = $_POST['userId'];
-
+        // Validar campos
         if (empty($newpass)) {
             $errorMessage = "Por favor, complete todos los campos.";
         } else {
@@ -58,10 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $errorMessage = "Error al cambiar la contraseña: " . $e->getMessage();
             }
         }
-    } elseif (isset($_POST['newemail'])) {
+    } 
+    // Nuevo bloque para cambiar email
+    elseif (isset($_POST['newemail'])) {
         $newEmail = trim($_POST['email']);
         $userId = $_POST['userId'];
-
+        // Validar campos
         if (empty($newEmail) || !filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
             $errorMessage = "Por favor, ingrese un correo electrónico válido.";
         } else {
@@ -233,23 +235,24 @@ if (isset($_GET['delete'])) {
     
     <script src="assets/js/script.js"></script>
     <script>
+    // Funciones para abrir modal de contraseña
     function openEditPasswordModal(userId, username) {
         document.getElementById('edit_password_user_id').value = userId;
         document.getElementById('edit_password_username').value = username;
         document.getElementById('editPasswordModal').style.display = 'block';
     }
-    
+    // Nueva función para abrir modal de email
     function openEditEmailModal(userId, username, email) {
         document.getElementById('edit_email_user_id').value = userId;
         document.getElementById('edit_email_username').value = username;
         document.getElementById('new_email').value = email;
         document.getElementById('editEmailModal').style.display = 'block';
     }
-
+    // Función para cerrar modales
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
     }
-    
+    // Cerrar modal al hacer clic fuera del contenido
     window.addEventListener('click', function(event) {
         if (event.target == document.getElementById('editPasswordModal')) {
             closeModal('editPasswordModal');
