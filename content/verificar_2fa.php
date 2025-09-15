@@ -4,11 +4,13 @@ include 'includes/config.php';
 include 'includes/auth.php';
 $error = '';
 
+// Si no hay un código 2FA en sesión(es decir, no está logueado el usuario), redirigir al login
 if (!isset($_SESSION['2fa_code']) || !isset($_SESSION['pending_user_id'])) {
     header("Location: login.php");
     exit;
 }
 
+// Si se manda una petición para verificar el código 2FA
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verificar'])) {
     $codigo_ingresado = trim($_POST['codigo']);
     
@@ -19,14 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verificar'])) {
         unset($_SESSION['2fa_code'], $_SESSION['2fa_expires_at'], $_SESSION['pending_user_id']);
     } elseif ($codigo_ingresado == $_SESSION['2fa_code']) {
         
-        // Código correcto, completar el inicio de sesión
+        // El código es correcto, se completa el inicio de sesión
         $user_id = $_SESSION['pending_user_id'];
-        
+
+        // Obtener información del usuario
         try {
             $stmt = $pdo->prepare("SELECT id, username FROM users WHERE id = ?");
             $stmt->execute([$user_id]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            // SI existe el usuario
             if ($user) {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['user_id'] = $user['id'];
@@ -37,14 +40,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verificar'])) {
 
                 header("Location: EtiquetadorOSL/index.php");
                 exit;
-            } else {
+            } 
+            // Si no existe el usuario
+            else {
                 $error = "Error al completar la autenticación. Por favor, intente de nuevo.";
             }
         } catch (PDOException $e) {
             $error = "Error al conectar con la base de datos: " . $e->getMessage();
         }
         
-    } else {
+    } 
+    // Si el código es incorrecto
+    else {
         $error = "Código incorrecto.";
     }
 }

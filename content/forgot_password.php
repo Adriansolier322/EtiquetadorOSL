@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $insertStmt->execute([$user['id'], $token, $expires]);
 
                 // Crear el enlace de restablecimiento
-                $resetLink = "http://localhost/reset_password.php?token=" . $token;
+                $resetLink = "http://<url>/reset_password.php?token=" . $token;
 
                 //CONFIGURACIÓN DE PHPMailer
                 $mail = new PHPMailer(true);
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->Port = 587;
 
                 // Destinatarios
-                $mail->setFrom('---', 'etiquetadorOSL');
+                $mail->setFrom('---', '---');   //Correo, nombre
                 $mail->addAddress($email);
 
                 // Contenido
@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $mail->Subject = "Restablecimiento de Contraseña";
                 $mail->Body    = "Haga clic en el siguiente enlace para restablecer su contraseña: <a href='{$resetLink}'>{$resetLink}</a>";
                 
+                // Enviar el correo
                 $mail->send();
 
                 $successMessage = "Se ha enviado un correo electrónico con las instrucciones para restablecer su contraseña.";
