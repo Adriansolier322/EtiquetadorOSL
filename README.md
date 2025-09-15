@@ -7,7 +7,7 @@ Asimismo, hay un dashboard para administradores donde se puede ver los distintos
 
 ## Instalación
 
-Hay dos formas de instalar el etiquetador. Por un lado, se puede usar Apache(_leyendo el README que se llama README-Apache.md_) o se puede usar nginx(_viendo el README que se llama [README-nginx.md](https://github.com/Adriansolier322/EtiquetadorOSL/blob/main/README-nginx.md)_)
+Hay dos formas de instalar el etiquetador. Por un lado, se puede usar Apache(_leyendo el README que se llama [README-Apache.md]https://github.com/Adriansolier322/EtiquetadorOSL/blob/main/README-Apache.md_) o se puede usar nginx(_viendo el README que se llama [README-nginx.md](https://github.com/Adriansolier322/EtiquetadorOSL/blob/main/README-nginx.md)_)
 
 ## Uso
 Una vez que entramos en la página, lo primero que hay que hacer es registrarse si no tenemos usuario, y si tenemos usuario iniciar sesión.
